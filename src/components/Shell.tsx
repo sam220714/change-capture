@@ -64,7 +64,7 @@ export function Shell({ children }: { children: ReactNode }) {
           <select
             value={viewerId}
             onChange={(e) => setViewer(e.target.value)}
-            className="hairline w-36 rounded-sm sm:w-auto sm:max-w-[220px] border-sirion-line bg-sirion-s1 px-3 py-2 text-sm text-sirion-text"
+            className="hairline w-[200px] rounded-sm border-sirion-line bg-sirion-s1 px-3 py-2 text-sm text-sirion-text sm:w-auto sm:max-w-[240px]"
           >
             {VIEWERS.map((id) => {
               const p = PEOPLE.find((x) => x.id === id)!;
@@ -98,7 +98,7 @@ function NavWithPath(props: NavProps) {
 
 function NavList({ path, myOpen, onReset }: NavProps & { path: string }) {
   return (
-          <nav className="flex gap-1 overflow-x-auto px-4 py-3 md:flex-col md:px-3 md:py-6">
+          <nav className="flex gap-1 overflow-x-auto py-3 pl-4 pr-10 [mask-image:linear-gradient(to_right,#000_calc(100%-40px),transparent)] md:flex-col md:px-3 md:py-6 md:[mask-image:none]">
             <p className="hidden px-3 pb-2 text-xs font-bold uppercase tracking-[1.5px] text-sirion-line md:block">The Case</p>
             {CASE.map((i) => (
               <NavLink key={i.href} {...i} path={path} />

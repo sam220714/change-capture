@@ -37,7 +37,7 @@ export default function Home() {
         </LinkButton>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-3">
+      <div className="grid gap-4 lg:grid-cols-3">
         <Stat value="2–3%" label="Of Procurement Contract Value Lost to Unrecorded or Unauthorised Changes" source="WorldCC with Ironclad, 2026 (vendor co-sponsored)" />
         <Stat value="54%" label="Have No Automated Data Flow Between Contract Systems" source="WorldCC with Sirion, 2026, n=170+" />
         <Stat value="3.6%" label="Of Supplier Invoices Contain Errors" source="IOFM via SC&H (older, second-hand)" />
@@ -46,16 +46,15 @@ export default function Home() {
       <Section eyebrow="How It Works" title="One Loop, From Thread to Invoice">
         <ol className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {LOOP.map((s, i) => (
-            <li key={s.title}>
-              <DarkCard className="h-full">
-                <span className="hairline flex h-[50px] w-[50px] items-center justify-center rounded-[9px] border-sirion-line">
-                  <s.icon size={22} strokeWidth={1.5} className="text-sirion-line" />
-                </span>
-                <p className="mt-4 text-xs font-bold uppercase tracking-[1.5px] text-sirion-line">Step {i + 1}</p>
-                <h3 className="mt-1 text-2xl font-normal text-sirion-text">{s.title}</h3>
-                <p className="mt-2 text-base font-light leading-6 text-sirion-soft">{s.text}</p>
-              </DarkCard>
-            </li>
+            // Subgrid: each card spans 4 rows so icon, step, title and text line up across a row of cards.
+            <DarkCard key={s.title} as="li" className="sm:row-span-4 sm:grid sm:grid-rows-subgrid sm:gap-y-0">
+              <span className="hairline flex h-[50px] w-[50px] items-center justify-center rounded-[9px] border-sirion-line">
+                <s.icon size={22} strokeWidth={1.5} className="text-sirion-line" />
+              </span>
+              <p className="mt-4 text-xs font-bold uppercase tracking-[1.5px] text-sirion-line">Step {i + 1}</p>
+              <h3 className="mt-1 text-2xl font-normal text-sirion-text">{s.title}</h3>
+              <p className="mt-2 text-base font-light leading-6 text-sirion-soft">{s.text}</p>
+            </DarkCard>
           ))}
         </ol>
         <p className="mt-6 max-w-3xl text-base font-light text-sirion-soft">
@@ -65,7 +64,7 @@ export default function Home() {
       </Section>
 
       <Section eyebrow="The Prototype" title="Four Threads to Try">
-        <div className="grid gap-4 md:grid-cols-2">
+        <div className="grid gap-4 lg:grid-cols-2">
           {THREADS.map((t) => (
             <Link key={t.id} href={`/app/capture/${t.id}`} className="group">
               <DarkCard className="h-full transition-shadow group-hover:shadow-glow">

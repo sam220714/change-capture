@@ -66,7 +66,7 @@ export function ContractView({ id }: { id: string }) {
         Owner {personById(c.businessOwnerId)?.name} · {c.po.id} {inr(c.po.value)} (headroom {inr(c.po.value - c.po.committed)}) · Governing law {c.msa.governingLaw}
       </p>
 
-      <ol className="mt-6 grid gap-2 sm:grid-cols-4">
+      <ol className="mt-6 grid gap-2 sm:grid-cols-2 xl:grid-cols-4">
         {stack.map((x, i) => (
           <li key={x.label} className="hairline rounded-lg border-sirion-light bg-sirion-card p-4">
             <p className="text-xs font-bold uppercase tracking-[1.5px] text-sirion-line">

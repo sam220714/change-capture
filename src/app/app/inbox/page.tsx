@@ -61,12 +61,12 @@ export default function InboxPage() {
         lead="Threads from supplier inboxes that have opted in. Change Capture reads these threads only, finds commercial changes, and turns them into routed change records."
       />
 
-      <div className="mb-6 flex flex-wrap items-center gap-3 text-sm text-sirion-muted2">
-        <span className="inline-flex items-start gap-2 rounded-lg bg-sirion-light px-3 py-1 text-sirion-s3">
-          <ShieldCheck size={14} strokeWidth={1.5} className="mt-1 shrink-0" /> Opt-in per supplier inbox. Personal mail is never scanned.
+      <div className="mb-6 flex flex-wrap items-stretch gap-3 text-sm text-sirion-muted2">
+        <span className="inline-flex items-center gap-2 rounded-lg bg-sirion-light px-3 py-1.5 text-sirion-s3">
+          <ShieldCheck size={14} strokeWidth={1.5} className="shrink-0" /> Opt-in per supplier inbox. Personal mail is never scanned.
         </span>
         {live !== null && (
-          <span className="hairline inline-flex items-center rounded-full border-sirion-line px-3 py-1">
+          <span className="hairline inline-flex items-center rounded-lg border-sirion-line px-3 py-1.5">
             {live ? "Live AI on: Gemini (free tier). Demo threads fall back to stored answers if it is busy." : "Demo mode: demo threads use stored extractions"}
           </span>
         )}
@@ -80,8 +80,8 @@ export default function InboxPage() {
             const last = t.messages[t.messages.length - 1];
             return (
               <li key={t.id}>
-                <Link href={rec ? `/app/changes/${rec.id}` : `/app/capture/${t.id}`} className="flex flex-col gap-3 px-5 py-4 transition-colors hover:bg-sirion-app md:flex-row md:items-center">
-                  <span className="hairline hidden h-10 w-10 shrink-0 items-center justify-center rounded-[9px] border-sirion-line md:flex">
+                <Link href={rec ? `/app/changes/${rec.id}` : `/app/capture/${t.id}`} className="flex flex-col gap-3 px-5 py-4 transition-colors hover:bg-sirion-app xl:flex-row xl:items-center xl:gap-4">
+                  <span className="hairline hidden h-10 w-10 shrink-0 items-center justify-center rounded-[9px] border-sirion-line xl:flex">
                     <Mail size={18} strokeWidth={1.5} className="text-sirion-line" />
                   </span>
                   <div className="min-w-0 flex-1">
@@ -91,20 +91,25 @@ export default function InboxPage() {
                     <p className="truncate text-base text-sirion-ink">{t.subject}</p>
                     <p className="mt-0.5 truncate text-sm font-light text-sirion-muted2">{last.body.split("\n").find((l) => l.length > 20)}</p>
                   </div>
-                  <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm md:shrink-0 md:flex-nowrap">
-                    <span className="rounded-full bg-sirion-light px-2.5 py-0.5 text-xs text-sirion-s3">{t.label}</span>
-                    <span className="text-xs text-sirion-muted2">
+                  {/* Below xl: label on its own line, then date left / action right. At xl: three fixed columns so every row lines up. */}
+                  <div className="grid grid-cols-[1fr_auto] items-center gap-x-4 gap-y-2 text-sm xl:flex xl:shrink-0">
+                    <span className="col-span-2 xl:col-span-1 xl:w-60">
+                      <span className="inline-flex rounded-full bg-sirion-light px-2.5 py-0.5 text-xs text-sirion-s3">{t.label}</span>
+                    </span>
+                    <span className="text-xs text-sirion-muted2 xl:w-36 xl:text-right">
                       {t.messages.length} msgs · {date(last.date)}
                     </span>
-                    {rec ? (
-                      <span className="flex items-center gap-2">
-                        <StageChip stage={rec.stage} /> <span className="text-xs text-sirion-muted2">{rec.id}</span>
-                      </span>
-                    ) : (
-                      <span className="inline-flex items-center gap-1 text-sirion-s3">
-                        Capture <ArrowRight size={14} strokeWidth={1.5} />
-                      </span>
-                    )}
+                    <span className="flex items-center justify-end gap-2 xl:w-44">
+                      {rec ? (
+                        <>
+                          <StageChip stage={rec.stage} /> <span className="text-xs text-sirion-muted2">{rec.id}</span>
+                        </>
+                      ) : (
+                        <span className="inline-flex items-center gap-1 text-sirion-s3">
+                          Capture <ArrowRight size={14} strokeWidth={1.5} />
+                        </span>
+                      )}
+                    </span>
                   </div>
                 </Link>
               </li>

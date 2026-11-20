@@ -164,7 +164,7 @@ export function ExtractionPanel({
         ))}
       </div>
       {(extraction.openQuestions.length > 0 || extraction.riskFlags.length > 0) && (
-        <div className="mt-4 grid gap-4 sm:grid-cols-2">
+        <div className={`mt-4 grid gap-4 ${extraction.openQuestions.length > 0 && extraction.riskFlags.length > 0 ? "sm:grid-cols-2" : ""}`}>
           {extraction.openQuestions.length > 0 && (
             <div>
               <p className="mb-1 text-xs font-bold uppercase tracking-[1.5px] text-sirion-line">Open Questions</p>
@@ -193,18 +193,21 @@ export function ExtractionPanel({
 
 export function ChecksList({ checks }: { checks: Check[] }) {
   return (
-    <ul className="divide-y divide-sirion-light">
+    // Container query: the source chip sits beside the text only when the panel is wide enough; in a narrow column it drops under the text instead of squeezing it.
+    <ul className="@container divide-y divide-sirion-light">
       {checks.map((c) => (
-        <li key={c.id} className="flex gap-3 py-3">
+        <li key={c.id} className="grid grid-cols-[auto_minmax(0,1fr)] gap-x-3 py-3 @lg:grid-cols-[auto_minmax(0,1fr)_auto]">
           <LevelIcon level={c.level} />
-          <div className="min-w-0 flex-1">
+          <div className="min-w-0">
             <p className="text-sm text-sirion-ink">
               {c.changeId && <span className="mr-2 text-xs text-sirion-muted2">{c.changeId}</span>}
               {c.title}
             </p>
             <p className="mt-0.5 text-sm font-light text-sirion-muted2">{c.detail}</p>
           </div>
-          {c.source && <span className="hidden shrink-0 self-start rounded-full bg-sirion-light px-2.5 py-0.5 text-xs text-sirion-s3 sm:inline">{c.source}</span>}
+          {c.source && (
+            <span className="col-start-2 mt-2 w-fit rounded-full bg-sirion-light px-2.5 py-0.5 text-xs text-sirion-s3 @lg:col-start-3 @lg:row-start-1 @lg:mt-0 @lg:self-start">{c.source}</span>
+          )}
         </li>
       ))}
     </ul>

@@ -145,6 +145,12 @@ The marketing site is all dark; Sirion's actual product screenshots are light. F
 - **AI / agent moments** (chat panel, suggestions, extracted clauses): mark with a teal accent: left border `2px #0D5E68`, a soft `#E7EFF0` fill on light, or the teal glow on dark. Keep a conversational "just ask" input prominent, since that's Sirion's headline positioning ("Conversational AI for Enterprise Contracting").
 - **Diffs / change capture:** additions teal-tinted (`rgba(13,94,104,0.12)` bg), removals muted red (`rgba(224,86,107,0.12)` bg, strikethrough).
 - Tables: 14px text, 44–48px rows, hairline row dividers, no zebra striping.
+- **Alignment (Derived):**
+  - Repeated tables (e.g. one per invoice) share fixed column widths via `table-fixed` + `colgroup`, so columns line up from card to card. Only the table scrolls on narrow screens, never the card title.
+  - Cards in a row that have the same inner sections (title, body, stat) align those sections with CSS subgrid (`row-span-N` + `grid-rows-subgrid`) or by pinning the last element to the bottom (`mt-auto`). Don't rely on equal text lengths.
+  - Side-by-side panels start on the same line: give both the same panel pattern (card, `p-5`, title row first).
+  - Content breakpoints count the 240px sidebar. Use `lg:` for 2–3 column card grids and `xl:` for 4–5 across; `md:` is the shell breakpoint only.
+  - Responsive grids declare `grid-cols-1` as the base so a wide child can't stretch the single track.
 
 ---
 

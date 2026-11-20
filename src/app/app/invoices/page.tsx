@@ -76,7 +76,7 @@ export default function InvoicesPage() {
 
       <div className="space-y-6">
         {checks.map((c) => (
-          <Card key={c.invoice.id} className="overflow-x-auto">
+          <Card key={c.invoice.id} className="overflow-hidden">
             <div className="flex flex-wrap items-baseline justify-between gap-2 px-5 pt-5">
               <div>
                 <p className="text-xs text-sirion-muted2">{supplierById(c.contract.supplierId)?.name}</p>
@@ -89,7 +89,16 @@ export default function InvoicesPage() {
                 {c.atRisk > 0 && <span className="ml-3 text-sirion-danger-ink">{inr(c.atRisk)} at risk</span>}
               </p>
             </div>
-            <table className="mt-3 w-full min-w-[760px] text-sm">
+            {/* Only the table scrolls on narrow screens; shared fixed column widths keep the three invoice tables lined up. */}
+            <div className="overflow-x-auto">
+            <table className="mt-3 w-full min-w-[980px] table-fixed text-sm">
+              <colgroup>
+                <col className="w-[240px]" />
+                <col className="w-[150px]" />
+                <col className="w-[150px]" />
+                <col className="w-[110px]" />
+                <col />
+              </colgroup>
               <thead>
                 <tr className="border-b border-sirion-light text-left text-xs text-sirion-muted2">
                   <th className="px-5 py-2 font-normal">Line</th>
@@ -123,6 +132,7 @@ export default function InvoicesPage() {
                 ))}
               </tbody>
             </table>
+            </div>
           </Card>
         ))}
       </div>

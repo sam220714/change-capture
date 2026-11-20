@@ -5,7 +5,7 @@ import { ArrowRight } from "lucide-react";
 export function CasePage({ eyebrow, title, lead, children, next }: { eyebrow: string; title: string; lead?: ReactNode; children: ReactNode; next?: { href: string; label: string } }) {
   return (
     <div className="hero-glow min-h-[calc(100vh-64px)]">
-      <div className="mx-auto max-w-5xl px-4 pb-24 pt-14 md:px-8 md:pt-20">
+      <div className="mx-auto max-w-6xl px-4 pb-24 pt-14 md:px-8 md:pt-20">
         <span className="hairline inline-flex rounded-full border-sirion-line px-4 py-1 text-sm text-sirion-soft">{eyebrow}</span>
         <h1 className="mt-5 max-w-4xl text-[40px] leading-[1.1] text-sirion-text md:text-[52px]">{title}</h1>
         {lead && <p className="mt-5 max-w-3xl text-lg font-light leading-7 text-sirion-soft">{lead}</p>}
@@ -30,16 +30,17 @@ export function Section({ eyebrow, title, children }: { eyebrow?: string; title:
   );
 }
 
-export function DarkCard({ children, className = "" }: { children: ReactNode; className?: string }) {
-  return <div className={`hairline rounded-lg border-sirion-line/50 bg-sirion-s2 p-6 ${className}`}>{children}</div>;
+/** Pass `as="li"` when the card is a direct child of a list, so a subgrid can align its rows with its neighbours. */
+export function DarkCard({ children, className = "", as: Tag = "div" }: { children: ReactNode; className?: string; as?: "div" | "li" }) {
+  return <Tag className={`hairline rounded-lg border-sirion-line/50 bg-sirion-s2 p-6 ${className}`}>{children}</Tag>;
 }
 
 export function Stat({ value, label, source }: { value: string; label: string; source: string }) {
   return (
-    <DarkCard>
+    <DarkCard className="flex flex-col">
       <p className="text-[40px] font-light leading-none text-sirion-text">{value}</p>
       <p className="mt-3 text-lg font-bold leading-[22px] text-sirion-text">{label}</p>
-      <p className="mt-2 text-xs text-sirion-soft">{source}</p>
+      <p className="mt-auto pt-2 text-xs text-sirion-soft">{source}</p>
     </DarkCard>
   );
 }

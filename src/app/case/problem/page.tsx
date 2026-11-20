@@ -38,7 +38,7 @@ export default function ProblemPage() {
       </Section>
 
       <Section eyebrow="Why It Matters" title="Sized for This Company">
-        <div className="grid gap-4 md:grid-cols-3">
+        <div className="grid gap-4 lg:grid-cols-3">
           <Stat value="2,500" label="Suppliers, Many on Rate Cards and SOWs" source="From the brief" />
           <Stat value="₹10–15 Cr" label="A Year at Risk From Unrecorded Changes" source="Illustrative: assumes ₹500 Cr addressable supplier spend × WorldCC's 2–3%" />
           <Stat value="Weeks" label="Before a Mismatch Surfaces, at Invoice Time" source="Changes are found when AP rejects a bill, if at all" />

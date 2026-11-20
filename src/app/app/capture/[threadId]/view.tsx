@@ -89,10 +89,13 @@ export function CaptureView({ threadId }: { threadId: string }) {
         )}
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)]">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)]">
+        {/* Same panel pattern as the right column (p-5, title row first) so both columns start on the same line. */}
         <section>
-          <Eyebrow className="mb-3">Email Thread</Eyebrow>
-          <ThreadView messages={messages} changes={result?.extraction.changes ?? []} focus={focus} />
+          <Card className="p-5">
+            <Eyebrow className="mb-3">Email Thread</Eyebrow>
+            <ThreadView messages={messages} changes={result?.extraction.changes ?? []} focus={focus} />
+          </Card>
         </section>
 
         <section className="space-y-6">

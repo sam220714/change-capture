@@ -37,17 +37,18 @@ export default function MetricsPage() {
       <Section eyebrow="How We Will Know It Works" title="Supporting Metrics">
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {SUPPORTING.map((s) => (
-            <DarkCard key={s.metric}>
+            // Target pinned to the bottom so it lines up across a row; the odd fifth card spans the row instead of leaving a hole.
+            <DarkCard key={s.metric} className="flex flex-col md:last:col-span-2">
               <h3 className="text-xl font-normal leading-7 text-sirion-text">{s.metric}</h3>
               <p className="mt-2 text-base font-light leading-6 text-sirion-soft">{s.why}</p>
-              <p className="mt-4 text-lg font-bold text-sirion-text">{s.target}</p>
+              <p className="mt-auto pt-4 text-lg font-bold text-sirion-text">{s.target}</p>
             </DarkCard>
           ))}
         </div>
       </Section>
 
       <Section eyebrow="Pilot" title="How It Would Be Tested">
-        <div className="grid gap-4 md:grid-cols-3">
+        <div className="grid gap-4 lg:grid-cols-3">
           <DarkCard>
             <p className="text-lg font-bold text-sirion-text">20 Suppliers, 8 Weeks</p>
             <p className="mt-2 text-base font-light leading-6 text-sirion-soft">Staffing, consulting and marketing agencies with the most rate cards and SOW changes.</p>

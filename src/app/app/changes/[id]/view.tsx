@@ -105,7 +105,7 @@ export function RecordView({ id }: { id: string }) {
         <FlowStrip r={r} />
       </Card>
 
-      <div className="grid gap-6 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)]">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)]">
         <div className="space-y-6">
           {/* Changes */}
           <Card className="overflow-hidden">
@@ -113,29 +113,35 @@ export function RecordView({ id }: { id: string }) {
               <Eyebrow>Captured Changes</Eyebrow>
             </div>
             <div className="overflow-x-auto">
-              <table className="mt-3 w-full min-w-[560px] text-sm">
+              {/* Fixed value columns; the effective date sits under the description so long values and descriptions never crush each other. */}
+              <table className="mt-3 w-full min-w-[560px] table-fixed text-sm">
+                <colgroup>
+                  <col />
+                  <col className="w-[120px]" />
+                  <col className="w-[170px]" />
+                  <col className="w-[130px]" />
+                </colgroup>
                 <thead>
                   <tr className="border-b border-sirion-light text-left text-xs text-sirion-muted2">
                     <th className="px-5 py-2 font-normal">Change</th>
                     <th className="px-3 py-2 font-normal">Current</th>
                     <th className="px-3 py-2 font-normal">New</th>
-                    <th className="px-3 py-2 font-normal">From</th>
                     <th className="px-5 py-2 font-normal">Status</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-sirion-light">
                   {r.extraction.changes.map((c) => (
-                    <tr key={c.id} className={`h-12 ${isLive(c) ? "" : "opacity-60"}`}>
-                      <td className="px-5 py-2 text-sirion-ink">
+                    <tr key={c.id} className={`h-12 align-top ${isLive(c) ? "" : "opacity-60"}`}>
+                      <td className="px-5 py-3 text-sirion-ink">
                         <span className="mr-2 text-xs text-sirion-muted2">{c.id}</span>
                         {c.description}
+                        {c.effectiveDate && <span className="mt-0.5 block text-xs text-sirion-muted2">From {date(c.effectiveDate)}</span>}
                       </td>
-                      <td className="px-3 py-2">{c.fromValue ? <span className="diff-del rounded px-1 text-sirion-muted2">{c.fromValue}</span> : "—"}</td>
-                      <td className="px-3 py-2">
+                      <td className="px-3 py-3">{c.fromValue ? <span className="diff-del rounded px-1 text-sirion-muted2">{c.fromValue}</span> : "—"}</td>
+                      <td className="px-3 py-3">
                         <span className="diff-add rounded px-1 text-sirion-ink">{c.toValue}</span>
                       </td>
-                      <td className="px-3 py-2 whitespace-nowrap text-sirion-muted2">{date(c.effectiveDate)}</td>
-                      <td className="px-5 py-2">
+                      <td className="px-5 py-3">
                         <StatusChip status={c.status} />
                       </td>
                     </tr>

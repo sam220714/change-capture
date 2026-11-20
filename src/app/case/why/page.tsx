@@ -40,7 +40,7 @@ export default function WhyPage() {
       </Section>
 
       <Section eyebrow="Why It Is Worth Solving" title="Four Reasons">
-        <div className="grid gap-4 md:grid-cols-2">
+        <div className="grid gap-4 lg:grid-cols-2">
           {REASONS.map((r) => (
             <DarkCard key={r.title}>
               <h3 className="text-2xl font-normal text-sirion-text">{r.title}</h3>
@@ -51,7 +51,7 @@ export default function WhyPage() {
       </Section>
 
       <Section eyebrow="Why Not the Others" title="Where Sirion Already Leads">
-        <div className="grid gap-4 md:grid-cols-3">
+        <div className="grid gap-4 lg:grid-cols-3">
           <DarkCard>
             <h3 className="text-xl font-normal text-sirion-text">Negotiation</h3>
             <p className="mt-2 text-base font-light leading-6 text-sirion-soft">Strong and productised at Sirion: IssueDetection and Redline agents in Word, playbooks, counterparty portal.</p>

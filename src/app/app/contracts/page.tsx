@@ -18,7 +18,7 @@ export default function ContractsPage() {
         title="Contract Terms"
         lead="The terms in force today for each supplier: MSA, then SOW, then amendments, then approved email changes. Every value links to its source."
       />
-      <div className="grid gap-4 md:grid-cols-3">
+      <div className="grid gap-4 lg:grid-cols-3">
         {CONTRACTS.map((c) => {
           const s = supplierById(c.supplierId)!;
           const views = termViews(c, records);

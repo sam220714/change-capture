@@ -91,17 +91,22 @@ export default function StakeholdersPage() {
       next={{ href: "/case/problem", label: "The Problem" }}
     >
       <Section eyebrow="The Map" title="What Each One Wants">
-        <div className="grid gap-4 md:grid-cols-2">
+        <div className="grid gap-4 lg:grid-cols-2">
           {PEOPLE.map((p) => (
-            <DarkCard key={p.who}>
+            // Subgrid: header, "Wants" and "In Change Capture" each share a row track with the neighbouring card.
+            <DarkCard key={p.who} className="lg:row-span-3 lg:grid lg:grid-rows-subgrid lg:gap-y-0">
               <div className="flex items-start justify-between gap-3">
                 <h3 className="text-2xl font-normal text-sirion-text">{p.who}</h3>
                 <Tag>{p.tag}</Tag>
               </div>
-              <p className="mt-4 text-xs font-bold uppercase tracking-[1.5px] text-sirion-line">Wants</p>
-              <p className="mt-1 text-base font-light leading-6 text-sirion-soft">{p.wants}</p>
-              <p className="mt-4 text-xs font-bold uppercase tracking-[1.5px] text-sirion-line">In Change Capture</p>
-              <p className="mt-1 text-base font-light leading-6 text-sirion-soft">{p.gets}</p>
+              <div className="mt-4">
+                <p className="text-xs font-bold uppercase tracking-[1.5px] text-sirion-line">Wants</p>
+                <p className="mt-1 text-base font-light leading-6 text-sirion-soft">{p.wants}</p>
+              </div>
+              <div className="mt-4">
+                <p className="text-xs font-bold uppercase tracking-[1.5px] text-sirion-line">In Change Capture</p>
+                <p className="mt-1 text-base font-light leading-6 text-sirion-soft">{p.gets}</p>
+              </div>
             </DarkCard>
           ))}
         </div>
@@ -133,14 +138,14 @@ export default function StakeholdersPage() {
       </Section>
 
       <Section eyebrow="How the Experiences Connect" title="One Record, Passed Between Teams">
-        <ol className="flex flex-col gap-3 md:flex-row md:items-stretch">
+        <ol className="flex flex-col gap-3 xl:flex-row xl:items-stretch">
           {FLOW.map((f, i) => (
-            <li key={f} className="flex items-center gap-3 md:flex-1">
+            <li key={f} className="flex items-center gap-3 xl:flex-1">
               <DarkCard className="h-full w-full p-4">
                 <p className="text-xs font-bold uppercase tracking-[1.5px] text-sirion-line">{i + 1}</p>
                 <p className="mt-1 text-base font-light leading-6 text-sirion-text">{f}</p>
               </DarkCard>
-              {i < FLOW.length - 1 && <ArrowRight size={16} strokeWidth={1.5} className="hidden shrink-0 text-sirion-line md:block" />}
+              {i < FLOW.length - 1 && <ArrowRight size={16} strokeWidth={1.5} className="hidden shrink-0 text-sirion-line xl:block" />}
             </li>
           ))}
         </ol>

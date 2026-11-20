@@ -59,7 +59,7 @@ export default function AssumptionsPage() {
   return (
     <CasePage eyebrow="Assumptions" title="What We Assumed About the Company, Its Systems and Data" lead="Stated so each can be checked and changed.">
       <Section title="Assumptions and Scope">
-        <div className="grid gap-4 md:grid-cols-2">
+        <div className="grid gap-4 lg:grid-cols-2">
           {GROUPS.map((g) => (
             <DarkCard key={g.title}>
               <h3 className="text-2xl font-normal text-sirion-text">{g.title}</h3>
