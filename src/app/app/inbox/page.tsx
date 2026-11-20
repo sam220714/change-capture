@@ -67,7 +67,7 @@ export default function InboxPage() {
         </span>
         {live !== null && (
           <span className="hairline inline-flex items-center rounded-full border-sirion-line px-3 py-1">
-            {live ? "Live AI on: Claude Opus 5.5" : "Demo mode: demo threads use stored extractions"}
+            {live ? "Live AI on: Gemini (free tier). Demo threads fall back to stored answers if it is busy." : "Demo mode: demo threads use stored extractions"}
           </span>
         )}
       </div>
@@ -140,7 +140,7 @@ export default function InboxPage() {
           <Button onClick={analyse} disabled={busy || text.trim().length < 20 || live === false}>
             {busy ? "Reading Thread…" : "Analyse Thread"} <ArrowRight size={14} strokeWidth={1.5} />
           </Button>
-          {live === false && <span className="text-sm text-sirion-muted2">Live AI is off in this deployment. Set ANTHROPIC_API_KEY to enable.</span>}
+          {live === false && <span className="text-sm text-sirion-muted2">Live AI is off in this deployment. Set GEMINI_API_KEY to enable.</span>}
           {error && <span className="text-sm text-sirion-danger-ink">{error}</span>}
         </div>
       </Card>

@@ -30,8 +30,9 @@ const GROUPS = [
   {
     title: "AI",
     items: [
-      "Claude Opus 5.5 reads the thread and returns a typed record with quotes as evidence.",
-      "Without an API key, demo threads use stored extractions in the same schema, labelled in the UI.",
+      "Google Gemini (free tier, Flash models) reads the thread and returns a typed record with quotes as evidence. Every quote is checked word for word against the email.",
+      "If the free tier is busy, demo threads fall back to stored extractions in the same format; Gemini's free tier may use prompts to improve Google products, which is acceptable only because the data here is synthetic.",
+      "Without an API key, demo threads use stored extractions in the same schema, labelled in the UI. A production version would use a paid tier with no training on customer data.",
       "AI never decides routing, authority or validity; those are rules over the contract and limits table.",
       "The AI drafts; a person approves before anything leaves the company.",
     ],

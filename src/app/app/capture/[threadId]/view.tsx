@@ -19,6 +19,8 @@ interface Result {
   extraction: Extraction;
   source: "live" | "stored";
   contractId: string;
+  model?: string;
+  note?: string;
   messages?: EmailMessage[];
 }
 
@@ -95,12 +97,12 @@ export function CaptureView({ threadId }: { threadId: string }) {
 
         <section className="space-y-6">
           {!result && !error && (
-            <div className="ai-surface animate-pulse rounded-r-lg p-6 text-sm text-sirion-s3">Reading the thread and working out what was agreed…</div>
+            <div className="ai-surface animate-pulse rounded-r-lg p-6 text-sm text-sirion-s3">Reading the thread and working out what was agreed. On the free Gemini tier this can take up to 40 seconds; if it is busy, the stored extraction is shown instead.</div>
           )}
           {error && <div className="rounded-lg bg-sirion-warning-soft p-4 text-sm text-sirion-warning-ink">{error}</div>}
           {result && contract && rules && (
             <>
-              <ExtractionPanel extraction={result.extraction} contract={contract} source={result.source} focus={focus} onFocus={setFocus} />
+              <ExtractionPanel extraction={result.extraction} contract={contract} source={result.source} model={result.model} note={result.note} focus={focus} onFocus={setFocus} />
 
               <Card className="p-5">
                 <div className="mb-1 flex items-baseline justify-between gap-3">

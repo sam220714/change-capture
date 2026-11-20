@@ -7,7 +7,7 @@ import { supplierById } from "@/lib/data/company";
 
 const LOOP = [
   { icon: MailSearch, title: "Read", text: "Opted-in supplier threads are matched to the contract by email domain and latest SOW." },
-  { icon: FileCheck2, title: "Decide What Was Agreed", text: "Claude marks each change proposed, agreed, rejected or superseded, quoting the email that proves it." },
+  { icon: FileCheck2, title: "Decide What Was Agreed", text: "The AI marks each change proposed, agreed, rejected or superseded, quoting the email that proves it." },
   { icon: Scale, title: "Check", text: "Rules test the MSA (is email enough?), the approver's authority, rate caps and PO headroom." },
   { icon: GitBranch, title: "Route", text: "Business owner confirms; Finance and Legal get only what crosses their limits, with the reason." },
   { icon: ShieldCheck, title: "Draft and Approve", text: "Amendment, supplier confirmation and holding replies are drafted. Nothing leaves without a person's approval." },
@@ -59,7 +59,7 @@ export default function Home() {
           ))}
         </ol>
         <p className="mt-6 max-w-3xl text-base font-light text-sirion-soft">
-          <span className="text-sirion-text">AI reads, rules decide.</span> Claude does what it is good at: reading a messy conversation and quoting evidence. Who approves, and whether a change breaks the MSA, is decided by plain rules
+          <span className="text-sirion-text">AI reads, rules decide.</span> The model does what it is good at: reading a messy conversation and quoting evidence. Who approves, and whether a change breaks the MSA, is decided by plain rules
           anyone can audit.
         </p>
       </Section>

@@ -8,20 +8,20 @@ The case (why this stage, stakeholder map, the problem, success metrics, assumpt
 
 ```bash
 npm install
-cp .env.example .env.local   # optional: add ANTHROPIC_API_KEY for live AI
+cp .env.example .env.local   # optional: add GEMINI_API_KEY for live AI
 npm run dev
 ```
 
 Open http://localhost:3000.
 
 - **Without a key:** the four demo threads use stored extractions (same schema the model returns, labelled "Stored extraction" in the UI). Pasting your own thread is disabled.
-- **With a key:** every thread, including pasted ones, is read live by `claude-opus-5-5` with structured output.
+- **With a key:** every thread, including pasted ones, is read live by Gemini (free tier, Flash models, JSON-schema output). If the free tier is busy, demo threads fall back to the stored answers.
 
 ## How it works
 
 | Layer | Where | Notes |
 |---|---|---|
-| AI extraction | `src/app/api/extract/route.ts`, `src/lib/ai/` | Claude returns changes with status (proposed / agreed / rejected / superseded) and verbatim evidence quotes |
+| AI extraction | `src/app/api/extract/route.ts`, `src/lib/ai/` | Gemini returns changes with status (proposed / agreed / rejected / superseded) and verbatim evidence quotes |
 | Rules | `src/lib/rules.ts` | MSA validity (is email enough?), authority, rate caps, PO headroom, payment terms, stamp duty and GST notes, routing. No AI. |
 | Current terms | `src/lib/terms.ts` | MSA → SOW → amendments → approved email changes, each value with its source; invoice check |
 | Drafts | `src/lib/drafts.ts` | Amendment / change order, supplier confirmation, decline |
@@ -32,4 +32,4 @@ Plan: `docs/V1_PLAN.md`. Design rules: `docs/DESIGN_GUIDELINES.md` (see `CLAUDE.
 
 ## Deploy
 
-Vercel: import the repo, optionally set `ANTHROPIC_API_KEY`, deploy.
+Vercel: import the repo, optionally set `GEMINI_API_KEY`, deploy.

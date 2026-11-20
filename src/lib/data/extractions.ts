@@ -1,8 +1,8 @@
 import type { Extraction } from "../types";
 
 /**
- * Stored extractions for the demo threads, in the exact schema Claude returns
- * (src/lib/ai/schema.ts). Used when ANTHROPIC_API_KEY is not set.
+ * Stored extractions for the demo threads, in the exact schema the model returns
+ * (src/lib/ai/schema.ts). Used when GEMINI_API_KEY is not set or Gemini is unavailable.
  */
 export const STORED_EXTRACTIONS: Record<string, Extraction> = {
   "t-tb-qa": {

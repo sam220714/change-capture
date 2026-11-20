@@ -38,13 +38,13 @@ The assignment also needs the case written inside the prototype (no slides): Why
 | Styling | Tailwind CSS v4 with Sirion tokens in `globals.css` `@theme` | Tokens from the design guidelines, one place to change |
 | Font | Hanken Grotesk (Google Fonts), weights 300/400/700 | Free fallback for PP Radio Grotesk |
 | Icons | lucide-react, 1.5px stroke | Guideline: line icons in teal |
-| AI | Anthropic TypeScript SDK, `claude-opus-5-5`, structured output via Zod | Extraction must return a typed record the rules can trust |
+| AI | Google Gemini free tier (Flash models) over REST, JSON schema output, validated with Zod | Free; extraction must return a typed record the rules can trust |
 | State | React context + `localStorage` | No DB needed for a prototype; "Reset demo" restores seed data |
 | Hosting | Vercel | Public link for submission |
 
-**AI vs rules split (a deliberate design choice):** Claude does the reading (who proposed what, what was agreed, what got superseded, with quotes as evidence). Plain code does the deciding (limits, caps, PO headroom, routing). Routing never depends on model judgement, so it is auditable and predictable.
+**AI vs rules split (a deliberate design choice):** the model does the reading (who proposed what, what was agreed, what got superseded, with quotes as evidence). Plain code does the deciding (limits, caps, PO headroom, routing). Routing never depends on model judgement, so it is auditable and predictable.
 
-**Demo mode:** without `ANTHROPIC_API_KEY`, the 4 demo threads use stored extractions in the same schema the model returns, labelled "Stored extraction". With a key, every thread (including pasted ones) runs live.
+**Demo mode:** without `GEMINI_API_KEY`, or when the free tier is busy (it often is), the 4 demo threads use stored extractions in the same schema the model returns, labelled "Stored extraction". With a key, every thread (including pasted ones) runs live. Evidence quotes are verified word for word on the server.
 
 ## 4. Data model
 

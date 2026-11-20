@@ -29,7 +29,7 @@ If a guideline doesn't cover the case, extend it in the same spirit (calm, teal-
 
 ## Code conventions
 
-- AI reads, code decides: Claude extracts changes from threads (`src/lib/ai/`); routing, limits and checks are deterministic (`src/lib/rules.ts`). Don't move routing decisions into the prompt.
-- Model: `claude-opus-5-5` via `@anthropic-ai/sdk` with Zod structured output. Without `ANTHROPIC_API_KEY`, demo threads fall back to stored extractions in `src/lib/data/extractions.ts`; keep those in the same schema.
+- AI reads, code decides: the model (Gemini) extracts changes from threads (`src/lib/ai/`); routing, limits and checks are deterministic (`src/lib/rules.ts`). Don't move routing decisions into the prompt.
+- Model: Google Gemini free tier over REST (`src/lib/ai/gemini.ts`), JSON-schema output validated with Zod, model fallback chain. Without `GEMINI_API_KEY` or when every model is busy, demo threads fall back to stored extractions in `src/lib/data/extractions.ts`; keep those in the same schema. Don't add flash-lite to the chain: it failed the agreed-vs-proposed test.
 - Seed data lives in `src/lib/data/`. State is client-side (`src/lib/store.tsx`) and persisted to localStorage.
 - Run `npm run lint` and `npm run build` before committing.

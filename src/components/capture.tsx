@@ -138,20 +138,25 @@ export function ExtractionPanel({
   extraction,
   contract,
   source,
+  model,
+  note,
   focus,
   onFocus,
 }: {
   extraction: Extraction;
   contract: Contract;
   source: "live" | "stored";
+  model?: string;
+  note?: string;
   focus?: string | null;
   onFocus?: (id: string | null) => void;
 }) {
   return (
     <AIPanel
       title="What Was Agreed"
-      meta={<span className="text-xs text-sirion-muted2">{source === "live" ? "Live: Claude Opus 5.5" : "Stored extraction (demo mode)"}</span>}
+      meta={<span className="text-xs text-sirion-muted2">{source === "live" ? `Live: ${model ?? "Gemini"}` : "Stored extraction"}</span>}
     >
+      {note && <p className="mb-3 rounded-sm bg-sirion-warning-soft px-3 py-2 text-xs text-sirion-warning-ink">{note}</p>}
       <p className="text-base font-light leading-6 text-sirion-ink">{extraction.summary}</p>
       <div className="mt-4 space-y-3">
         {extraction.changes.map((c) => (
