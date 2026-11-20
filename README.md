@@ -1,36 +1,35 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Change Capture
 
-## Getting Started
+Prototype for the Sirion assessment (Stage 1: Contract Intake). Commercial changes to live supplier contracts (rates, headcount, dates, scope, payment terms) get agreed over email and never reach the contract. Change Capture reads those threads, works out what was actually agreed, checks it against the MSA and approval limits, routes it to Business, Finance and Legal, drafts the amendment and supplier confirmation, and keeps the contract's current terms up to date so invoices are checked against what was really agreed.
 
-First, run the development server:
+The case (why this stage, stakeholder map, the problem, success metrics, assumptions) is written inside the app.
+
+## Run
 
 ```bash
+npm install
+cp .env.example .env.local   # optional: add ANTHROPIC_API_KEY for live AI
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open http://localhost:3000.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- **Without a key:** the four demo threads use stored extractions (same schema the model returns, labelled "Stored extraction" in the UI). Pasting your own thread is disabled.
+- **With a key:** every thread, including pasted ones, is read live by `claude-opus-5-5` with structured output.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## How it works
 
-## Learn More
+| Layer | Where | Notes |
+|---|---|---|
+| AI extraction | `src/app/api/extract/route.ts`, `src/lib/ai/` | Claude returns changes with status (proposed / agreed / rejected / superseded) and verbatim evidence quotes |
+| Rules | `src/lib/rules.ts` | MSA validity (is email enough?), authority, rate caps, PO headroom, payment terms, stamp duty and GST notes, routing. No AI. |
+| Current terms | `src/lib/terms.ts` | MSA → SOW → amendments → approved email changes, each value with its source; invoice check |
+| Drafts | `src/lib/drafts.ts` | Amendment / change order, supplier confirmation, decline |
+| State | `src/lib/store.tsx` | Browser localStorage; "Reset Demo" in the sidebar clears it |
+| Seed data | `src/lib/data/` | 3 suppliers, MSAs/SOWs, 4 threads, 3 invoices, people and approval limits (all synthetic) |
 
-To learn more about Next.js, take a look at the following resources:
+Plan: `docs/V1_PLAN.md`. Design rules: `docs/DESIGN_GUIDELINES.md` (see `CLAUDE.md` for the pre-ship checklist).
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Deploy
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Vercel: import the repo, optionally set `ANTHROPIC_API_KEY`, deploy.
