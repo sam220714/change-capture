@@ -239,7 +239,7 @@ export function CaptureView({ threadId }: { threadId: string }) {
               ...rules.gst,
             ];
             return notes.length > 0 ? (
-              <Collapsible title="Good To Know" count={notes.length}>
+              <Collapsible title="Good To Know" count={notes.length} defaultOpen>
                 <CheckRows checks={notes} />
               </Collapsible>
             ) : null;
