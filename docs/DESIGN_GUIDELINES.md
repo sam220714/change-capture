@@ -151,6 +151,9 @@ The marketing site is all dark; Sirion's actual product screenshots are light. F
   - Side-by-side panels start on the same line: give both the same panel pattern (card, `p-5`, title row first).
   - Content breakpoints count the 240px sidebar. Use `lg:` for 2–3 column card grids and `xl:` for 4–5 across; `md:` is the shell breakpoint only.
   - Responsive grids declare `grid-cols-1` as the base so a wide child can't stretch the single track.
+- **Review buckets (Derived):** a change is sorted into one of three buckets and keeps that colour family wherever it appears (icon tile, counter, tint). You Can Approve = teal (`sirion-s3`, tint `sirion-s3/10`). Needs Sign-Off = warning (`sirion-warning`, `sirion-warning-soft`, ink `sirion-warning-ink`). Not Allowed As Agreed = danger (`sirion-danger`, tint `sirion-danger/[0.07]`, ink `sirion-danger-ink`). Bucket colour marks status only; the primary action is still the single purple button.
+- **Verdict card (Derived):** a light card that opens a review screen: bucket icon tile, eyebrow, a one-line verdict in 28px/300, a sentence of detail, three counter tiles that scroll to their section (a zero count is muted), then the action row with one purple primary. Text written by code is not AI-marked; only model output gets the teal mark.
+- **Thread tracing (Derived):** quotes the AI used are highlighted in the source thread. Hover or keyboard focus on a change previews only its quotes; a Show in Thread button pins it. While focused, messages with none of its quotes fade to 40% and the focused card gets the teal border and glow. A bar above the thread says what is shown and offers Show All.
 
 ---
 

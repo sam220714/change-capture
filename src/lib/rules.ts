@@ -39,6 +39,30 @@ export function valueImpact(c: ExtractedChange, contract: Contract): number {
   return 0;
 }
 
+/** Where a live change lands for the business owner. Decided here in code, never by the model. */
+export type Bucket = "approve" | "signoff" | "blocked";
+
+export interface Signer {
+  role: ActingRole;
+  assigneeId: string;
+  reason: string;
+}
+
+export interface ChangeVerdict {
+  change: ExtractedChange;
+  bucket: Bucket;
+  /** Contract term label when the change maps to one, else the model's description. */
+  name: string;
+  /** This change's own checks. GST is record-level, so it is not in here. */
+  checks: Check[];
+  /** Who has to say yes, with the routing reason for each. */
+  signers: Signer[];
+  /** One short clause per blocking check, e.g. "breaks the 5% MSA rate cap (+11.9% vs 5%)". */
+  blockNotes: string[];
+  pct: number | null;
+  impact: number;
+}
+
 export interface RuleResult {
   checks: Check[];
   steps: ApprovalStep[];
@@ -46,7 +70,33 @@ export interface RuleResult {
   totalImpact: number;
   hasAgreed: boolean;
   needsClarification: boolean;
+  /** Every live (agreed or proposed) change with its bucket, in thread order. */
+  verdicts: ChangeVerdict[];
+  /** Superseded or rejected in the thread. In no bucket. */
+  closed: ExtractedChange[];
+  /** Record-level: validity of the instrument and stamp duty. */
+  binds: Check[];
+  /** Record-level: GST notes. The extraction's riskFlags and openQuestions sit beside these in the UI. */
+  gst: Check[];
 }
+
+export function changeName(c: ExtractedChange, contract: Contract): string {
+  return termFor(contract, c.termKey)?.label ?? c.description;
+}
+
+/** The rate that would sit exactly at the MSA cap, for a rate increase that breaks it. */
+export function capCounter(c: ExtractedChange, contract: Contract): { capPct: number; rate: number; display: string; clause: string } | null {
+  const cap = contract.msa.rules.rateCapPct;
+  const p = changePct(c);
+  if (cap == null || c.type !== "rate" || p == null || p <= cap || c.fromNumeric == null) return null;
+  const rate = Math.round(c.fromNumeric * (1 + cap / 100) * 100) / 100;
+  const suffix = c.toValue.replace(/^[^/]*?[\d,.]+/, "").trim(); // "₹2,070 / hr" -> "/ hr"
+  const digits = Number.isInteger(rate) ? 0 : 2;
+  const num = rate.toLocaleString("en-IN", { minimumFractionDigits: digits, maximumFractionDigits: digits });
+  return { capPct: cap, rate, display: `₹${num}${suffix ? ` ${suffix}` : ""}`, clause: contract.msa.rules.rateCapClause ?? "" };
+}
+
+const isGstCheck = (k: Check) => k.id.endsWith("-gst");
 
 export function evaluate(extraction: Extraction, contract: Contract): RuleResult {
   const checks: Check[] = [];
@@ -56,11 +106,21 @@ export function evaluate(extraction: Extraction, contract: Contract): RuleResult
   const live = extraction.changes.filter(isLive);
   const agreed = live.filter((c) => c.status === "agreed");
   const routes = new Map<ActingRole, string[]>();
-  const route = (role: ActingRole, reason: string) => {
-    const list = routes.get(role) ?? [];
+  const routesByChange = new Map<string, Map<ActingRole, string[]>>();
+  const add = (m: Map<ActingRole, string[]>, role: ActingRole, reason: string) => {
+    const list = m.get(role) ?? [];
     if (!list.includes(reason)) list.push(reason);
-    routes.set(role, list);
+    m.set(role, list);
   };
+  // Finance and Legal reasons also feed the record-level steps; the owner's own reason is per change only.
+  const route = (changeId: string, role: ActingRole, reason: string) => {
+    const own = routesByChange.get(changeId) ?? new Map<ActingRole, string[]>();
+    routesByChange.set(changeId, own);
+    add(own, role, reason);
+    if (role !== "business_owner") add(routes, role, reason);
+  };
+  const blockNotes = new Map<string, string[]>();
+  const note = (changeId: string, text: string) => blockNotes.set(changeId, [...(blockNotes.get(changeId) ?? []), text]);
   let ratify: string | null = null;
 
   for (const c of extraction.changes) {
@@ -103,6 +163,8 @@ export function evaluate(extraction: Extraction, contract: Contract): RuleResult
           source: "Approval limits",
           routesTo: "business_owner",
         });
+        route(c.id, "business_owner", `Ratify or reject: agreed by ${who}, who has no authority.`);
+        note(c.id, `was agreed by ${who}, who has no approval authority`);
       }
     }
 
@@ -121,7 +183,8 @@ export function evaluate(extraction: Extraction, contract: Contract): RuleResult
           source: `${contract.msa.id} cl. ${rules.rateCapClause}`,
           routesTo: "legal",
         });
-        route("legal", `Rate increase of ${pct(p)} breaks the ${rules.rateCapPct}% MSA cap (cl. ${rules.rateCapClause}).`);
+        route(c.id, "legal", `Rate increase of ${pct(p)} breaks the ${rules.rateCapPct}% MSA cap (cl. ${rules.rateCapClause}).`);
+        note(c.id, `breaks the ${rules.rateCapPct}% MSA rate cap (${pct(p)} vs ${rules.rateCapPct}%)`);
       } else if (rules.rateCapPct != null && c.type === "rate") {
         checks.push({
           id: `${c.id}-cap`,
@@ -142,7 +205,7 @@ export function evaluate(extraction: Extraction, contract: Contract): RuleResult
           source: "Approval limits",
           routesTo: "finance",
         });
-        route("finance", `Increase of ${pct(p)} is above the business owner's ${owner.authority.ratePct}% limit.`);
+        route(c.id, "finance", `Increase of ${pct(p)} is above the business owner's ${owner.authority.ratePct}% limit.`);
       } else {
         checks.push({
           id: `${c.id}-limit`,
@@ -168,9 +231,19 @@ export function evaluate(extraction: Extraction, contract: Contract): RuleResult
         source: contract.po.id,
         routesTo: impact > headroom ? "finance" : undefined,
       });
-      if (impact > headroom) route("finance", `Adds ${inr(impact)}, above the ${inr(headroom)} left on ${contract.po.id}.`);
-      if (impact > owner.authority.valueINR && impact <= headroom)
-        route("finance", `Adds ${inr(impact)}, above the business owner's ${inr(owner.authority.valueINR)} value limit.`);
+      if (impact > headroom) route(c.id, "finance", `Adds ${inr(impact)}, above the ${inr(headroom)} left on ${contract.po.id}.`);
+      if (impact > owner.authority.valueINR && impact <= headroom) {
+        route(c.id, "finance", `Adds ${inr(impact)}, above the business owner's ${inr(owner.authority.valueINR)} value limit.`);
+        checks.push({
+          id: `${c.id}-value`,
+          changeId: c.id,
+          level: "warn",
+          title: `Above business owner's value limit (${inr(impact)} vs ${inr(owner.authority.valueINR)})`,
+          detail: `${owner.name} can approve up to ${inr(owner.authority.valueINR)} of added spend. Finance approval needed.`,
+          source: "Approval limits",
+          routesTo: "finance",
+        });
+      }
       checks.push({
         id: `${c.id}-gst`,
         changeId: c.id,
@@ -191,8 +264,8 @@ export function evaluate(extraction: Extraction, contract: Contract): RuleResult
         source: `${contract.msa.id} cl. ${rules.paymentTermsClause}`,
         routesTo: "legal",
       });
-      route("legal", `Payment terms are an MSA term (cl. ${rules.paymentTermsClause}).`);
-      route("finance", `Shorter payment terms change cash flow (${c.fromValue ?? "?"} → ${c.toValue}).`);
+      route(c.id, "legal", `Payment terms are an MSA term (cl. ${rules.paymentTermsClause}).`);
+      route(c.id, "finance", `Shorter payment terms change cash flow (${c.fromValue ?? "?"} → ${c.toValue}).`);
     }
 
     if (c.type === "dates" && term?.key === "date.end") {
@@ -223,7 +296,7 @@ export function evaluate(extraction: Extraction, contract: Contract): RuleResult
         id: "validity",
         level: "warn",
         title: "Email agreement does not change this contract",
-        detail: `${clause?.title} (cl. ${rules.amendmentClause}): "${clause?.text}" A signed ${instrument === "amendment" ? "amendment" : "Change Order"} is required; one is drafted below.`,
+        detail: `${clause?.title} (cl. ${rules.amendmentClause}): "${clause?.text}" A signed ${instrument === "amendment" ? "amendment" : "Change Order"} is required; one is drafted once the record is created.`,
         source: `${contract.msa.id} cl. ${rules.amendmentClause}`,
       });
     } else if (signed) {
@@ -275,5 +348,36 @@ export function evaluate(extraction: Extraction, contract: Contract): RuleResult
     if (leg) steps.push({ id: "s-legal", role: "legal", assigneeId: "p-anika", reason: leg.join(" "), status: "pending" });
   }
 
-  return { checks, steps, instrument, totalImpact, hasAgreed: agreed.length > 0, needsClarification };
+  // Buckets. Block beats sign-off beats approve. A change needs sign-off when anyone besides the owner must say yes, or when it is not fully agreed.
+  const verdicts: ChangeVerdict[] = live.map((c) => {
+    const own = checks.filter((k) => k.changeId === c.id && !isGstCheck(k));
+    const mine = routesByChange.get(c.id) ?? new Map<ActingRole, string[]>();
+    const outside = mine.has("finance") || mine.has("legal");
+    const bucket: Bucket = own.some((k) => k.level === "block") ? "blocked" : c.status === "proposed" || outside ? "signoff" : "approve";
+    const signers: Signer[] = [];
+    if (bucket !== "approve") {
+      const people: Record<ActingRole, string> = { business_owner: owner.id, finance: "p-rahul", legal: "p-anika" };
+      for (const role of ["business_owner", "finance", "legal"] as const) {
+        const reasons = mine.get(role);
+        if (reasons) signers.push({ role, assigneeId: people[role], reason: reasons.join(" ") });
+      }
+      if (signers.length === 0) {
+        signers.push({ role: "business_owner", assigneeId: owner.id, reason: "Not agreed by both sides yet. Resolve the open points with the supplier before this binds." });
+      }
+    }
+    return { change: c, bucket, name: changeName(c, contract), checks: own, signers, blockNotes: blockNotes.get(c.id) ?? [], pct: changePct(c), impact: valueImpact(c, contract) };
+  });
+
+  return {
+    checks,
+    steps,
+    instrument,
+    totalImpact,
+    hasAgreed: agreed.length > 0,
+    needsClarification,
+    verdicts,
+    closed: extraction.changes.filter((c) => !isLive(c)),
+    binds: checks.filter((k) => k.id === "validity" || k.id === "stamp"),
+    gst: checks.filter(isGstCheck),
+  };
 }
