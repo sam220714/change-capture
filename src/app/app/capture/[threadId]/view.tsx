@@ -39,7 +39,7 @@ export function CaptureView({ threadId }: { threadId: string }) {
       const raw = sessionStorage.getItem(PASTED_KEY);
       // eslint-disable-next-line react-hooks/set-state-in-effect -- read the pasted result once on mount
       if (raw) setResult(JSON.parse(raw) as Result);
-      else setError("No pasted thread found. Paste one in the inbox.");
+      else setError("No pasted thread found. Paste one on the Paste a Thread page.");
       return;
     }
     fetch("/api/extract", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ threadId }) })
@@ -75,11 +75,11 @@ export function CaptureView({ threadId }: { threadId: string }) {
 
   return (
     <WorkSurface>
-      <Link href="/app/inbox" className="mb-4 inline-flex items-center gap-1 text-sm text-sirion-s3 hover:underline">
-        <ArrowLeft size={14} strokeWidth={1.5} /> Supplier Inbox
+      <Link href="/app/capture" className="mb-4 inline-flex items-center gap-1 text-sm text-sirion-s3 hover:underline">
+        <ArrowLeft size={14} strokeWidth={1.5} /> Paste a Thread
       </Link>
       <div className="mb-6">
-        <Eyebrow>Step 2 · Capture</Eyebrow>
+        <Eyebrow>Capture</Eyebrow>
         <h1 className="mt-2 text-[32px] leading-9 text-sirion-ink">{subject}</h1>
         {contract && supplier && (
           <p className="mt-3 inline-flex flex-wrap items-center gap-2 rounded-full bg-sirion-light px-3 py-1 text-sm text-sirion-s3">

@@ -21,10 +21,10 @@ const EVIDENCE = [
 export default function ProblemPage() {
   return (
     <CasePage
-      eyebrow="3 · The Problem"
+      eyebrow="The Problem"
       title="The Contract Says One Thing, the Inbox Says Another"
       lead="Commercial terms on live supplier contracts change in email. The contract record doesn't. Every invoice is then checked against terms that are no longer true."
-      next={{ href: "/app/inbox", label: "The Working Prototype" }}
+      next={{ href: "/app/capture", label: "The Working Prototype" }}
     >
       <Section eyebrow="Who It Affects" title="Five Groups, One Gap">
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">

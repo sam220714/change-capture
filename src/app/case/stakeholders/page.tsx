@@ -43,7 +43,7 @@ const PEOPLE = [
     who: "Employees and DPO",
     tag: "Privacy",
     wants: "No surveillance of personal mail. DPDP compliance for personal data in threads.",
-    gets: "Opt-in per supplier inbox or thread only. Nothing else is read.",
+    gets: "Only the thread the business owner pastes is read. No mailbox access.",
   },
 ];
 
@@ -75,8 +75,8 @@ const CONFLICTS = [
   {
     a: "Visibility",
     b: "Privacy",
-    tension: "More mail read means more changes caught, and more personal data processed.",
-    resolve: "Opt-in only, supplier inboxes not people. Coverage gaps are accepted as the price of trust.",
+    tension: "More threads captured means more changes caught, and more personal data processed.",
+    resolve: "Only what a person pastes, never a mailbox. Coverage gaps are accepted as the price of trust.",
   },
 ];
 
@@ -85,7 +85,7 @@ const FLOW = ["Business owner captures and confirms", "Finance and Legal approve
 export default function StakeholdersPage() {
   return (
     <CasePage
-      eyebrow="2 · Stakeholder Map"
+      eyebrow="Stakeholder Map"
       title="Who Has a Stake in a Change Agreed Over Email"
       lead="We build for three internal stakeholders: the Business owner who agrees the change, Finance, and Legal. Accounts Payable, Procurement, the supplier and employees are affected and shape the design."
       next={{ href: "/case/problem", label: "The Problem" }}

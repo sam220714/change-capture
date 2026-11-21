@@ -65,8 +65,8 @@ export function RecordView({ id }: { id: string }) {
     return (
       <WorkSurface>
         <Empty title="Change record not found">
-          <Link href="/app/inbox" className="text-sirion-s3 underline">
-            Back to the inbox
+          <Link href="/app/capture" className="text-sirion-s3 underline">
+            Back to Paste a Thread
           </Link>
         </Empty>
       </WorkSurface>

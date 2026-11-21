@@ -6,7 +6,7 @@ import { THREADS } from "@/lib/data/threads";
 import { supplierById } from "@/lib/data/company";
 
 const LOOP = [
-  { icon: MailSearch, title: "Read", text: "Opted-in supplier threads are matched to the contract by email domain and latest SOW." },
+  { icon: MailSearch, title: "Read", text: "A thread the business owner pastes is matched to the contract by email domain and latest SOW." },
   { icon: FileCheck2, title: "Decide What Was Agreed", text: "The AI marks each change proposed, agreed, rejected or superseded, quoting the email that proves it." },
   { icon: Scale, title: "Check", text: "Rules test the MSA (is email enough?), the approver's authority, rate caps and PO headroom." },
   { icon: GitBranch, title: "Route", text: "Business owner confirms; Finance and Legal get only what crosses their limits, with the reason." },
@@ -29,7 +29,7 @@ export default function Home() {
       lead="Rates, headcount, dates, scope and payment terms on live supplier contracts get agreed in email and never reach the contract. Change Capture reads those threads, works out what was actually agreed, routes it to the right people, and keeps the contract current, so invoices are checked against the real terms."
     >
       <div className="-mt-6 flex flex-wrap gap-3">
-        <LinkButton href="/app/inbox" className="rounded-md px-4 py-3 text-lg">
+        <LinkButton href="/app/capture" className="rounded-md px-4 py-3 text-lg">
           Start the Demo <ArrowRight size={18} strokeWidth={1.5} />
         </LinkButton>
         <LinkButton href="/case/why" variant="secondary-dark" className="rounded-md px-4 py-3 text-lg">

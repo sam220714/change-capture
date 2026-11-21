@@ -36,7 +36,7 @@ export default function ChangesPage() {
   return (
     <WorkSurface>
       <PageHeader
-        eyebrow="Step 3 · Business, Finance and Legal"
+        eyebrow="Business, Finance and Legal"
         title="Change Records"
         lead="Every captured change, who it is waiting on, and why. Switch who you are viewing as (top right) to see each team's queue."
       />
@@ -49,8 +49,8 @@ export default function ChangesPage() {
       </div>
       {!ready ? null : list.length === 0 ? (
         <Empty title={filter === "mine" ? "Nothing waiting on you" : "No change records yet"}>
-          <p className="mb-4">Capture a thread from the supplier inbox to create one.</p>
-          <LinkButton href="/app/inbox">Open Supplier Inbox</LinkButton>
+          <p className="mb-4">Paste a supplier thread to create one.</p>
+          <LinkButton href="/app/capture">Paste a Thread</LinkButton>
         </Empty>
       ) : (
         <Card className="overflow-x-auto">

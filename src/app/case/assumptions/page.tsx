@@ -13,7 +13,7 @@ const GROUPS = [
   {
     title: "Systems",
     items: [
-      "Mail on Microsoft 365 or Google Workspace. Real version connects via a BCC address or a shared supplier inbox.",
+      "Mail on Microsoft 365 or Google Workspace. The business owner copies a thread out of their mail and pastes it in; nothing connects to a mailbox.",
       "MSAs and SOWs already sit in a structured repository with key terms extracted (assumed built).",
       "POs and invoices live in an ERP or Excel; the prototype uses three October invoices.",
       "E-signature exists; the prototype simulates sending and signing.",
@@ -40,7 +40,7 @@ const GROUPS = [
   {
     title: "Privacy and India",
     items: [
-      "Opt-in per supplier inbox or thread. Personal mailboxes are never scanned. DPDP applies to personal data in threads.",
+      "Only the thread a business owner chooses to paste is processed. No mailbox is read or scanned. DPDP applies to personal data in threads.",
       "Amendments that change consideration may need stamp duty under the state Stamp Act; unstamped instruments are inadmissible until duty is paid.",
       "Rate changes change GST on invoices; AP is told to expect it.",
     ],
@@ -48,7 +48,7 @@ const GROUPS = [
   {
     title: "Not in This Version",
     items: [
-      "Live mail integration, sign-in and roles, a database (state is kept in the browser), ERP connection.",
+      "Live mail integration (forwarding or connecting a mailbox), sign-in and roles, a database (state is kept in the browser), ERP connection.",
       "Non-commercial changes (liability, IP, data protection terms).",
       "Supplier-facing portal.",
     ],

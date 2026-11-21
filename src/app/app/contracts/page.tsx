@@ -14,7 +14,7 @@ export default function ContractsPage() {
   return (
     <WorkSurface>
       <PageHeader
-        eyebrow="Step 4 · Repository"
+        eyebrow="Repository"
         title="Contract Terms"
         lead="The terms in force today for each supplier: MSA, then SOW, then amendments, then approved email changes. Every value links to its source."
       />

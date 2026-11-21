@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Suspense, type ReactNode } from "react";
-import { BarChart3, FileStack, FileText, Inbox, Lightbulb, ListChecks, Network, ReceiptText, RotateCcw, Target, Telescope } from "lucide-react";
+import { BarChart3, FileStack, FileText, ClipboardPaste, Lightbulb, ListChecks, Network, ReceiptText, RotateCcw, Target, Telescope } from "lucide-react";
 import { useStore } from "@/lib/store";
 import { PEOPLE, VIEWERS } from "@/lib/data/company";
 
@@ -17,14 +17,14 @@ const CASE = [
 ];
 
 const APP = [
-  { href: "/app/inbox", label: "Supplier Inbox", icon: Inbox },
+  { href: "/app/capture", label: "Paste a Thread", icon: ClipboardPaste },
   { href: "/app/changes", label: "Change Records", icon: ListChecks },
   { href: "/app/contracts", label: "Contract Terms", icon: FileStack },
   { href: "/app/invoices", label: "Invoice Check", icon: ReceiptText },
 ];
 
-function NavLink({ href, label, icon: Icon, badge, path }: { href: string; label: string; icon: typeof Inbox; badge?: number; path: string }) {
-  const active = href === "/" ? path === "/" : path.startsWith(href) || (href === "/app/inbox" && path.startsWith("/app/capture"));
+function NavLink({ href, label, icon: Icon, badge, path }: { href: string; label: string; icon: typeof ClipboardPaste; badge?: number; path: string }) {
+  const active = href === "/" ? path === "/" : path.startsWith(href);
   return (
     <Link
       href={href}

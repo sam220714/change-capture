@@ -30,7 +30,7 @@ export default function InvoicesPage() {
   return (
     <WorkSurface>
       <PageHeader
-        eyebrow="Step 5 · Accounts Payable"
+        eyebrow="Accounts Payable"
         title="Invoice Check"
         lead="October invoices checked against the contract. Compare what AP sees with the SOW alone against what it sees once email changes are captured."
       />
@@ -54,7 +54,7 @@ export default function InvoicesPage() {
             {records.length === 0 ? (
               <>
                 No changes captured yet.{" "}
-                <Link href="/app/inbox" className="text-sirion-s3 underline">
+                <Link href="/app/capture" className="text-sirion-s3 underline">
                   Capture the threads
                 </Link>{" "}
                 to see the difference.

@@ -5,13 +5,13 @@ const SUPPORTING = [
   { metric: "Precision of \"agreed\" calls", why: "A false \"agreed\" updates the contract wrongly. This is the riskiest AI judgement.", target: "≥ 95% on a labelled sample" },
   { metric: "Median time from email agreement to approved record", why: "Shows the routing actually removes stalls.", target: "< 3 business days" },
   { metric: "Routing overrides", why: "How often approvers say the wrong team was asked.", target: "< 10% of records" },
-  { metric: "Supplier opt-in coverage", why: "Value depends on how many supplier inboxes are connected.", target: "80% of staffing, consulting and agency spend" },
+  { metric: "Capture rate", why: "Value depends on business owners pasting the threads where changes were agreed.", target: "80% of agreed changes found in the audit" },
 ];
 
 const RETHINK = [
   { signal: "Most changes turn out to be agreed on calls or Teams, not email.", then: "Capture is in the wrong channel. Add meeting notes and chat, or a one-line \"log a change\" prompt." },
   { signal: "Precision on \"agreed\" stays below 90% after prompt iteration.", then: "Stop auto-recording. Switch to a triage queue where a person confirms every status." },
-  { signal: "Business owners won't opt supplier inboxes in.", then: "The value needs a mandate (BCC policy) or the product must earn trust another way." },
+  { signal: "Business owners don't paste threads in.", then: "Capture depends on a habit they won't form. Add a lighter path (forward an email, a prompt when an invoice disagrees) or make it policy." },
   { signal: "The pilot audit finds little invoice variance from email changes.", then: "The leakage case is weak. Reposition around compliance and authority instead of money." },
   { signal: "Approvers approve in seconds without opening the record.", then: "Routing is too noisy. Raise limits so only real exceptions reach Finance and Legal." },
 ];
@@ -19,7 +19,7 @@ const RETHINK = [
 export default function MetricsPage() {
   return (
     <CasePage
-      eyebrow="5 · Success Metrics"
+      eyebrow="Success Metrics"
       title="Measured by Whether the Contract Is Current"
       lead="Activity metrics (threads read, records created) would look good even if the contract stayed wrong. The north star measures the outcome: the agreed change is in the contract record, fast."
     >

@@ -22,7 +22,7 @@ const REASONS = [
 export default function WhyPage() {
   return (
     <CasePage
-      eyebrow="1 · Why This Stage"
+      eyebrow="Why This Stage"
       title="Intake, Applied to Contracts That Are Already Signed"
       lead="The brief describes intake as turning scattered requests into structured, routed, trackable work. The most expensive scattered requests are not new contracts. They are changes to live ones, agreed in email."
       next={{ href: "/case/stakeholders", label: "Stakeholder Map" }}
