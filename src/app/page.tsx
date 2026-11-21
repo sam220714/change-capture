@@ -38,9 +38,9 @@ export default function Home() {
       </div>
 
       <div className="grid gap-4 lg:grid-cols-3">
-        <Stat value="2–3%" label="Of Procurement Contract Value Lost to Unrecorded or Unauthorised Changes" source="WorldCC with Ironclad, 2026 (vendor co-sponsored)" />
-        <Stat value="54%" label="Have No Automated Data Flow Between Contract Systems" source="WorldCC with Sirion, 2026, n=170+" />
-        <Stat value="3.6%" label="Of Supplier Invoices Contain Errors" source="IOFM via SC&H (older, second-hand)" />
+        <Stat value="2–3%" label="Of Procurement Contract Value Lost to Unrecorded or Unauthorised Changes" source="WorldCC with Ironclad, 2026" />
+        <Stat value="54%" label="Have No Automated Data Flow Between Contract Systems" source="WorldCC with Sirion, 2026" />
+        <Stat value="3.6%" label="Of Supplier Invoices Contain Errors" source="IOFM via SC&H" />
       </div>
 
       <Section eyebrow="How It Works" title="One Loop, From Thread to Invoice">
@@ -86,7 +86,7 @@ export default function Home() {
         <ol className="mt-4 list-decimal space-y-2 pl-5 text-base leading-7">
           <li>Viewing as Priya, capture the QA rate thread, approve it, send the amendment and mark it signed. Contract Terms now show ₹1,236 with its source.</li>
           <li>Capture the senior developer thread. Note the MSA cap breach. Approve as Priya, then switch to Rahul (Finance) and Anika (Legal).</li>
-          <li>Capture the festive campaign thread and switch to Arjun to ratify or reject what the coordinator agreed.</li>
+          <li>Capture the festive campaign thread and switch to Vikram to ratify or reject what the coordinator agreed.</li>
           <li>Capture the Kestrel thread. Nothing is agreed, so you get a clarifying reply to approve instead of an approval chain.</li>
           <li>Open Invoice Check and flip between SOW Only and Current Agreed Terms.</li>
         </ol>

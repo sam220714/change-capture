@@ -57,7 +57,7 @@ const GROUPS = [
 
 export default function AssumptionsPage() {
   return (
-    <CasePage eyebrow="Assumptions" title="What We Assumed About the Company, Its Systems and Data" lead="Stated so each can be checked and changed.">
+    <CasePage eyebrow="Assumptions" title="What We Assumed About the Company, Its Systems and Data" lead="Stated so each can be checked and changed." next={{ href: "/app/capture", label: "The Working Prototype" }}>
       <Section title="Assumptions and Scope">
         <div className="grid gap-4 lg:grid-cols-2">
           {GROUPS.map((g) => (

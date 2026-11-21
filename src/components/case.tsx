@@ -37,10 +37,10 @@ export function DarkCard({ children, className = "", as: Tag = "div" }: { childr
 
 export function Stat({ value, label, source }: { value: string; label: string; source: string }) {
   return (
-    <DarkCard className="flex flex-col">
+    <DarkCard className="lg:row-span-3 lg:grid lg:grid-rows-subgrid lg:gap-y-0">
       <p className="text-[40px] font-light leading-none text-sirion-text">{value}</p>
       <p className="mt-3 text-lg font-bold leading-[22px] text-sirion-text">{label}</p>
-      <p className="mt-auto pt-2 text-xs text-sirion-soft">{source}</p>
+      <p className="pt-2 text-xs text-sirion-soft">{source}</p>
     </DarkCard>
   );
 }

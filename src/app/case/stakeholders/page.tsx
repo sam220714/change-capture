@@ -149,7 +149,7 @@ export default function StakeholdersPage() {
             </li>
           ))}
         </ol>
-        <p className="mt-4 max-w-3xl text-base font-light text-sirion-soft">In the prototype, use &ldquo;Viewing as&rdquo; at the top to switch between Priya, Vikram or Arjun (business), Rahul (Finance) and Anika (Legal).</p>
+        <p className="mt-4 max-w-3xl text-base font-light text-sirion-soft">In the prototype, use &ldquo;Viewing as&rdquo; at the top to switch between Priya or Vikram (business), Rahul (Finance) and Anika (Legal).</p>
       </Section>
 
       <LightCallout>

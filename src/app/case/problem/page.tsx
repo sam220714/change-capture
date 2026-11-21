@@ -1,4 +1,4 @@
-import { CasePage, DarkCard, LightCallout, Prose, Section, Stat, Tag } from "@/components/case";
+import { CasePage, DarkCard, Prose, Section, Stat } from "@/components/case";
 
 const WHO = [
   { who: "Business Owners", pain: "Agree changes under delivery pressure (\"we can't lose the team\"). The paperwork never follows, and they carry the risk if it goes wrong." },
@@ -9,13 +9,13 @@ const WHO = [
 ];
 
 const EVIDENCE = [
-  { claim: "Unauthorised or unrecorded changes cost about 2–3% of procurement contract value.", source: "WorldCC with Ironclad, 2026", quality: "Association, vendor co-sponsor" },
-  { claim: "\"Negotiated terms live in PDFs, billing rules in emails, rate cards in spreadsheets\", so AP checks invoice against invoice, not against the contract.", source: "PRGX, 2026", quality: "Audit firm" },
-  { claim: "Contract data is often captured once, then updated manually, periodically, or only at amendment or renewal. 54% have no automated data flow.", source: "WorldCC with Sirion, 2026, n=170+", quality: "Association, vendor co-sponsor" },
-  { claim: "AI extraction is weakest on amendments and order forms, where pricing and quantity changes live.", source: "Redress Compliance", quality: "Advisory" },
-  { claim: "Staffing audits recovered ~$5M from miscalculated markups and ~$1.5M from PTO billed twice.", source: "apexanalytix, c.2020", quality: "Audit firm case, older" },
-  { claim: "3.6% of supplier invoices contain errors; 73% say AP struggles to match POs and invoices.", source: "IOFM via SC&H; Zip 2023", quality: "Older, second-hand; vendor survey" },
-  { claim: "Scope changes are the top cause of contracting delays, cited by 45%.", source: "ContractPodAi / ACC, 2023, n=400", quality: "Vendor survey" },
+  { claim: "Unauthorised or unrecorded changes cost about 2–3% of procurement contract value.", source: "WorldCC with Ironclad, 2026" },
+  { claim: "\"Negotiated terms live in PDFs, billing rules in emails, rate cards in spreadsheets\", so AP checks invoice against invoice, not against the contract.", source: "PRGX, 2026" },
+  { claim: "Contract data is often captured once, then updated manually, periodically, or only at amendment or renewal. 54% have no automated data flow.", source: "WorldCC with Sirion, 2026" },
+  { claim: "AI extraction is weakest on amendments and order forms, where pricing and quantity changes live.", source: "Redress Compliance" },
+  { claim: "Staffing audits recovered ~$5M from miscalculated markups and ~$1.5M from PTO billed twice.", source: "apexanalytix, c.2020" },
+  { claim: "3.6% of supplier invoices contain errors; 73% say AP struggles to match POs and invoices.", source: "IOFM via SC&H; Zip 2023" },
+  { claim: "Scope changes are the top cause of contracting delays, cited by 45%.", source: "ContractPodAi / ACC, 2023" },
 ];
 
 export default function ProblemPage() {
@@ -24,7 +24,7 @@ export default function ProblemPage() {
       eyebrow="The Problem"
       title="The Contract Says One Thing, the Inbox Says Another"
       lead="Commercial terms on live supplier contracts change in email. The contract record doesn't. Every invoice is then checked against terms that are no longer true."
-      next={{ href: "/app/capture", label: "The Working Prototype" }}
+      next={{ href: "/case/metrics", label: "Success Metrics" }}
     >
       <Section eyebrow="Who It Affects" title="Five Groups, One Gap">
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -51,24 +51,20 @@ export default function ProblemPage() {
         </Prose>
       </Section>
 
-      <Section eyebrow="How We Know It Is Real" title="Evidence, With Its Quality Shown">
+      <Section eyebrow="How We Know It Is Real" title="What Published Research Says">
         <div className="hairline overflow-x-auto rounded-lg border-sirion-line/50">
           <table className="w-full min-w-[640px] text-sm">
             <thead>
               <tr className="border-b border-sirion-line/40 text-left text-xs text-sirion-soft">
                 <th className="px-5 py-3 font-normal">Finding</th>
-                <th className="px-3 py-3 font-normal">Source</th>
-                <th className="px-5 py-3 font-normal">Type</th>
+                <th className="px-5 py-3 font-normal">Source</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-sirion-line/30">
               {EVIDENCE.map((e) => (
                 <tr key={e.claim}>
                   <td className="px-5 py-3 text-sirion-text">{e.claim}</td>
-                  <td className="px-3 py-3 text-sirion-soft">{e.source}</td>
-                  <td className="px-5 py-3">
-                    <Tag>{e.quality}</Tag>
-                  </td>
+                  <td className="px-5 py-3 text-sirion-soft">{e.source}</td>
                 </tr>
               ))}
             </tbody>
@@ -76,13 +72,6 @@ export default function ProblemPage() {
         </div>
       </Section>
 
-      <LightCallout>
-        <p className="text-xs font-bold uppercase tracking-[1.5px] text-sirion-s3">What the Evidence Does Not Show</p>
-        <p className="mt-3 text-lg font-light leading-7">
-          Most numbers come from vendors that sell a fix, and no study measures directly how many changes agreed in email never reach the contract. That gap is the first thing a pilot
-          would measure: sample six months of supplier threads for 20 suppliers and compare them with the contract record.
-        </p>
-      </LightCallout>
     </CasePage>
   );
 }

@@ -4,8 +4,8 @@ const SUPPORTING = [
   { metric: "Invoice value held or corrected before payment", why: "The payoff the brief names: invoices that match agreed prices.", target: "Tracked in ₹ per month" },
   { metric: "Precision of \"agreed\" calls", why: "A false \"agreed\" updates the contract wrongly. This is the riskiest AI judgement.", target: "≥ 95% on a labelled sample" },
   { metric: "Median time from email agreement to approved record", why: "Shows the routing actually removes stalls.", target: "< 3 business days" },
-  { metric: "Routing overrides", why: "How often approvers say the wrong team was asked.", target: "< 10% of records" },
-  { metric: "Capture rate", why: "Value depends on business owners pasting the threads where changes were agreed.", target: "80% of agreed changes found in the audit" },
+  { metric: "Routing overrides", why: "Routing is rules, so it can only be wrong if the limits table is off or a change was misread. Each override says which. Too many and Finance and Legal stop trusting the queue, which brings the stalls back.", target: "< 10% of records" },
+  { metric: "Capture rate", why: "Every other metric is measured on captured changes. If owners don't paste the threads where changes were agreed, none of the value arrives, so this is the adoption test.", target: "80% of agreed changes found in the audit" },
 ];
 
 const RETHINK = [
@@ -21,6 +21,7 @@ export default function MetricsPage() {
     <CasePage
       eyebrow="Success Metrics"
       title="Measured by Whether the Contract Is Current"
+      next={{ href: "/case/assumptions", label: "Assumptions" }}
       lead="Activity metrics (threads read, records created) would look good even if the contract stayed wrong. The north star measures the outcome: the agreed change is in the contract record, fast."
     >
       <section className="rounded-lg bg-sirion-s2 p-8 shadow-glow">

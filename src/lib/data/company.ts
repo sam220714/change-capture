@@ -21,15 +21,7 @@ export const PEOPLE: Person[] = [
     id: "p-vikram",
     name: "Vikram Sethi",
     email: "vikram.sethi@kavora.in",
-    title: "Head of Supply Chain",
-    role: "business_owner",
-    authority: { ratePct: 5, valueINR: 500000 },
-  },
-  {
-    id: "p-arjun",
-    name: "Arjun Rao",
-    email: "arjun.rao@kavora.in",
-    title: "Head of Brand Marketing",
+    title: "Head of Operations",
     role: "business_owner",
     authority: { ratePct: 5, valueINR: 500000 },
   },
@@ -68,7 +60,7 @@ export const PEOPLE: Person[] = [
 ];
 
 /** People you can switch the app to "view as". */
-export const VIEWERS = ["p-priya", "p-vikram", "p-arjun", "p-rahul", "p-anika"];
+export const VIEWERS = ["p-priya", "p-vikram", "p-rahul", "p-anika"];
 
 export const APPROVAL_LIMITS = [
   {

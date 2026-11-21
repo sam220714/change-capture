@@ -192,7 +192,7 @@ export const CONTRACTS: Contract[] = [
     id: "c-ll",
     supplierId: "s-ll",
     title: "Always-On Social and Campaign Retainer",
-    businessOwnerId: "p-arjun",
+    businessOwnerId: "p-vikram",
     stampState: "Karnataka",
     msa: {
       id: "MSA-LL-2025",
@@ -208,7 +208,7 @@ export const CONTRACTS: Contract[] = [
         {
           id: "3.5",
           title: "Authorised Representatives",
-          text: "Customer's authorised representative is its Head of Brand Marketing, or a delegate named by them in writing.",
+          text: "Customer's authorised representative is its Head of Operations, or a delegate named by them in writing.",
         },
         {
           id: "6.2",

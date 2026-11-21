@@ -6,7 +6,8 @@ import { contractById } from "./data/contracts";
 import { personById } from "./data/company";
 import { evaluate, isLive } from "./rules";
 
-const KEY = "change-capture-v1";
+// v2: saved demo state from v1 may reference a persona that no longer exists.
+const KEY = "change-capture-v2";
 
 interface State {
   viewerId: string;
