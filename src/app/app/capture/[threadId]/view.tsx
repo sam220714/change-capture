@@ -188,7 +188,7 @@ export function CaptureView({ threadId }: { threadId: string }) {
                   </Button>
                 )}
                 <p className="min-w-[220px] flex-1 text-xs text-sirion-muted2">{routeCaption(rules, voice, existing?.id)}</p>
-                <p className="basis-full text-xs text-sirion-muted2">{result.source === "live" ? `Read live by ${result.model ?? "Gemini"}.` : "Read from the stored extraction."}</p>
+                <p className="text-xs text-sirion-muted2 sm:ml-auto sm:text-right">{result.source === "live" ? `Read live by ${result.model ?? "Gemini"}.` : "Read from the stored extraction."}</p>
               </>
             }
           />
