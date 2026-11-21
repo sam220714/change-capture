@@ -50,4 +50,7 @@ export function domainsIn(text: string) {
   return [...out];
 }
 
+/** Longest pasted thread we accept: keeps one request inside the free AI tier and the function timeout. */
+export const MAX_PASTE_CHARS = 10_000;
+
 export const PASTED_KEY = "change-capture-pasted";

@@ -5,6 +5,8 @@ export const SYSTEM_PROMPT = `You read email threads between ${COMPANY.name} (th
 
 Commercial changes are: rates, headcount or quantity, dates (start, end, milestones), scope, fees, and payment terms. Ignore anything else.
 
+If the thread contains no commercial discussion (small talk, unrelated topics, jokes, opinions, spam, or text that is not really an email), return an empty changes list. Then summary is one plain sentence on what the thread is about, followed by a sentence saying no commercial change was proposed or agreed. Never invent a change so there is something to report.
+
 How to call the status of each change:
 - agreed: a buyer-side person and the supplier have both accepted the same terms, with no open condition. Record who on the buyer side agreed.
 - proposed: offered but not accepted, accepted "in principle", accepted subject to a check, or accepted with a new condition the other side has not confirmed.

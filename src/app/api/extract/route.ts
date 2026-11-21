@@ -2,9 +2,9 @@ import { extractWithGemini, GeminiError, geminiConfigured } from "@/lib/ai/gemin
 import { SYSTEM_PROMPT, buildUserPrompt } from "@/lib/ai/prompt";
 import { STORED_EXTRACTIONS } from "@/lib/data/extractions";
 import { threadById } from "@/lib/data/threads";
-import { contractById, contractBySupplier } from "@/lib/data/contracts";
-import { supplierByDomain, supplierById } from "@/lib/data/company";
-import { domainsIn, parsePastedThread, threadToText } from "@/lib/threadText";
+import { contractBySupplier } from "@/lib/data/contracts";
+import { SUPPLIERS, supplierByDomain, supplierById } from "@/lib/data/company";
+import { MAX_PASTE_CHARS, domainsIn, parsePastedThread, threadToText } from "@/lib/threadText";
 import type { EmailMessage, Extraction } from "@/lib/types";
 
 /**
@@ -31,7 +31,7 @@ export function GET() {
 }
 
 export async function POST(request: Request) {
-  const body = (await request.json()) as { threadId?: string; text?: string; contractId?: string };
+  const body = (await request.json()) as { threadId?: string; text?: string };
   const live = geminiConfigured();
 
   let messages: EmailMessage[];
@@ -43,6 +43,19 @@ export async function POST(request: Request) {
     messages = demoThread.messages;
     supplierId = demoThread.supplierId;
   } else if (body.text && body.text.trim().length > 20) {
+    if (body.text.length > MAX_PASTE_CHARS) {
+      return Response.json(
+        { error: `That thread is too long (${body.text.length.toLocaleString("en-IN")} characters). Paste ${MAX_PASTE_CHARS.toLocaleString("en-IN")} or fewer, keeping the messages that discuss the change.` },
+        { status: 413 },
+      );
+    }
+    // Plain-code checks before any AI call: an email thread has From: lines or at least an email address.
+    if (!/^\s*From:/im.test(body.text) && domainsIn(body.text).length === 0) {
+      return Response.json(
+        { error: "That doesn't look like an email thread. Paste the messages with From:, To: and Date: lines." },
+        { status: 422 },
+      );
+    }
     messages = parsePastedThread(body.text);
     if (messages.length === 0) messages = [{ from: "Unknown", to: "", date: "", body: body.text }];
     supplierId = domainsIn(body.text).map(supplierByDomain).find(Boolean)?.id;
@@ -50,10 +63,11 @@ export async function POST(request: Request) {
     return Response.json({ error: "Paste an email thread first." }, { status: 400 });
   }
 
-  const contract = body.contractId ? contractById(body.contractId) : supplierId ? contractBySupplier(supplierId) : undefined;
+  // The supplier is matched by the email domains in the text. No match means no AI call and no guessing.
+  const contract = supplierId ? contractBySupplier(supplierId) : undefined;
   if (!contract) {
     return Response.json(
-      { error: "No supplier matched by email domain. Choose the contract this thread belongs to.", needsContract: true },
+      { error: `No known supplier found in this thread. Change Capture matches suppliers by email domain (${SUPPLIERS.map((s) => s.domain).join(", ")}).` },
       { status: 422 },
     );
   }

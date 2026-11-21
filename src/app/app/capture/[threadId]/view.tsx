@@ -12,7 +12,7 @@ import { evaluate } from "@/lib/rules";
 import { useStore } from "@/lib/store";
 import { PASTED_KEY } from "@/lib/threadText";
 import { inr } from "@/lib/format";
-import { Button, Card, Eyebrow, LinkButton, WorkSurface } from "@/components/ui";
+import { AIPanel, Button, Card, Eyebrow, LinkButton, WorkSurface } from "@/components/ui";
 import { ChecksList, ExtractionPanel, StepsPreview, ThreadView } from "@/components/capture";
 
 interface Result {
@@ -73,6 +73,30 @@ export function CaptureView({ threadId }: { threadId: string }) {
     router.push(`/app/changes/${id}`);
   }
 
+  // Nothing to record: say so plainly. No thread column, checks or routing, since there is nothing to check or route.
+  if (result && result.extraction.changes.length === 0) {
+    return (
+      <WorkSurface>
+        <Link href="/app/capture" className="mb-4 inline-flex items-center gap-1 text-sm text-sirion-s3 hover:underline">
+          <ArrowLeft size={14} strokeWidth={1.5} /> Paste a Thread
+        </Link>
+        <div className="max-w-2xl">
+          <AIPanel title="No Commercial Changes Found" meta={<span className="text-xs text-sirion-muted2">{result.source === "live" ? `Live: ${result.model ?? "Gemini"}` : "Stored extraction"}</span>}>
+            <p className="text-base font-light leading-6 text-sirion-ink">{result.extraction.summary}</p>
+            <p className="mt-3 text-sm text-sirion-muted2">
+              Change Capture looks for rates, headcount, dates, scope, fees and payment terms that were proposed or agreed. Nothing like that is in this thread, so there is no change to record.
+            </p>
+          </AIPanel>
+          <div className="mt-5">
+            <LinkButton href="/app/capture">
+              Paste Another Thread <ArrowRight size={14} strokeWidth={1.5} />
+            </LinkButton>
+          </div>
+        </div>
+      </WorkSurface>
+    );
+  }
+
   return (
     <WorkSurface>
       <Link href="/app/capture" className="mb-4 inline-flex items-center gap-1 text-sm text-sirion-s3 hover:underline">
@@ -89,15 +113,7 @@ export function CaptureView({ threadId }: { threadId: string }) {
         )}
       </div>
 
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)]">
-        {/* Same panel pattern as the right column (p-5, title row first) so both columns start on the same line. */}
-        <section>
-          <Card className="p-5">
-            <Eyebrow className="mb-3">Email Thread</Eyebrow>
-            <ThreadView messages={messages} changes={result?.extraction.changes ?? []} focus={focus} />
-          </Card>
-        </section>
-
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,6fr)_minmax(0,5fr)]">
         <section className="space-y-6">
           {!result && !error && (
             <div className="ai-surface animate-pulse rounded-r-lg p-6 text-sm text-sirion-s3">Reading the thread and working out what was agreed. On the free Gemini tier this can take up to 40 seconds; if it is busy, the stored extraction is shown instead.</div>
@@ -108,10 +124,7 @@ export function CaptureView({ threadId }: { threadId: string }) {
               <ExtractionPanel extraction={result.extraction} contract={contract} source={result.source} model={result.model} note={result.note} focus={focus} onFocus={setFocus} />
 
               <Card className="p-5">
-                <div className="mb-1 flex items-baseline justify-between gap-3">
-                  <Eyebrow>Contract Checks</Eyebrow>
-                  <span className="text-xs text-sirion-muted2">Rules, not AI: MSA clauses, approval limits, PO</span>
-                </div>
+                <Eyebrow className="mb-1">Contract Checks</Eyebrow>
                 <ChecksList checks={rules.checks} />
               </Card>
 
@@ -142,6 +155,14 @@ export function CaptureView({ threadId }: { threadId: string }) {
               </Card>
             </>
           )}
+        </section>
+
+        {/* Inferences first, the pasted thread beside them as the source. Same panel pattern (p-5, title row first) so both columns start on the same line. */}
+        <section>
+          <Card className="p-5">
+            <Eyebrow className="mb-3">Email Thread</Eyebrow>
+            <ThreadView messages={messages} changes={result?.extraction.changes ?? []} focus={focus} />
+          </Card>
         </section>
       </div>
     </WorkSurface>
