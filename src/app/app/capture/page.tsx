@@ -69,7 +69,7 @@ export default function PasteThreadPage() {
     <WorkSurface>
       <PageHeader
         eyebrow="Business Owner"
-        title="Paste a Thread"
+        title="Capture a Change"
         lead="Copy a supplier email thread and paste it here. Change Capture reads only what you paste, finds the commercial changes, and turns them into a routed change record."
       />
 

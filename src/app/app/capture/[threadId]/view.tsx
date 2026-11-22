@@ -48,7 +48,7 @@ export function CaptureView({ threadId }: { threadId: string }) {
       const raw = sessionStorage.getItem(PASTED_KEY);
       // eslint-disable-next-line react-hooks/set-state-in-effect -- read the pasted result once on mount
       if (raw) setResult(JSON.parse(raw) as Result);
-      else setError("No pasted thread found. Paste one on the Paste a Thread page.");
+      else setError("No pasted thread found. Paste one on the Capture a Change page.");
       return;
     }
     fetch("/api/extract", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ threadId }) })
@@ -123,7 +123,7 @@ export function CaptureView({ threadId }: { threadId: string }) {
     return (
       <WorkSurface>
         <Link href="/app/capture" className="mb-4 inline-flex items-center gap-1 text-sm text-sirion-s3 hover:underline">
-          <ArrowLeft size={14} strokeWidth={1.5} /> Paste a Thread
+          <ArrowLeft size={14} strokeWidth={1.5} /> Capture a Change
         </Link>
         <div className="max-w-2xl">
           <AIPanel title="No Commercial Changes Found" meta={<span className="text-xs text-sirion-muted2">{result.source === "live" ? `Live: ${result.model ?? "Gemini"}` : "Stored extraction"}</span>}>
@@ -149,7 +149,7 @@ export function CaptureView({ threadId }: { threadId: string }) {
   return (
     <WorkSurface>
       <Link href="/app/capture" className="mb-4 inline-flex items-center gap-1 text-sm text-sirion-s3 hover:underline">
-        <ArrowLeft size={14} strokeWidth={1.5} /> Paste a Thread
+        <ArrowLeft size={14} strokeWidth={1.5} /> Capture a Change
       </Link>
       <div className="mb-6">
         <Eyebrow>Capture</Eyebrow>

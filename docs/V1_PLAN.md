@@ -70,7 +70,7 @@ Invoice       id, contractId, period, lines[{termKey, qty, rate, amount}], payme
 | Case | `/case/stakeholders` | Map: wants, conflicts, how the product resolves each |
 | Case | `/case/metrics` | North-star, supporting metrics, rethink triggers |
 | Case | `/case/assumptions` | Company, systems, data, scope cuts |
-| App | `/app/capture` | Paste a Thread: paste box plus sample threads |
+| App | `/app/capture` | Capture a Change: paste box plus sample threads |
 | App | `/app/capture/[threadId]` | Thread with evidence highlights, AI extraction, checks, routing preview, Create Change Record |
 | App | `/app/changes` | Queue, filtered by current role |
 | App | `/app/changes/[id]` | Change record: diff, approval steps, drafts, send, mark signed |

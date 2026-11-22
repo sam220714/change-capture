@@ -50,7 +50,7 @@ export default function ChangesPage() {
       {!ready ? null : list.length === 0 ? (
         <Empty title={filter === "mine" ? "Nothing waiting on you" : "No change records yet"}>
           <p className="mb-4">Paste a supplier thread to create one.</p>
-          <LinkButton href="/app/capture">Paste a Thread</LinkButton>
+          <LinkButton href="/app/capture">Capture a Change</LinkButton>
         </Empty>
       ) : (
         <Card className="overflow-x-auto">

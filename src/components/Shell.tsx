@@ -17,7 +17,7 @@ const CASE = [
 ];
 
 const APP = [
-  { href: "/app/capture", label: "Paste a Thread", icon: ClipboardPaste },
+  { href: "/app/capture", label: "Capture a Change", icon: ClipboardPaste },
   { href: "/app/changes", label: "Change Records", icon: ListChecks },
   { href: "/app/contracts", label: "Contract Terms", icon: FileStack },
   { href: "/app/invoices", label: "Invoice Check", icon: ReceiptText },
