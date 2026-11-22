@@ -35,11 +35,7 @@ export default function ProblemPage() {
       <Section eyebrow="Where This Comes From" title="I Was the Person Running Between Legal and Operations">
         <Prose>
           <p>
-            Picture the largest invoice your business has ever raised: ₹24.89 lakh. The next morning the client disputes ₹48,444 of it, about 2%, and the whole invoice stops. For every
-            rupee genuinely in dispute, fifty-one sit still. The money arrives 20 days after the due date.
-          </p>
-          <p>
-            At Refyne, where I worked on B2B invoicing, this was routine, and the cause was usually the same: <strong>a term had changed, and the invoice hadn&apos;t</strong>. Objections
+            At Refyne, where I worked on B2B invoicing, clients often disputed invoices, and the cause was usually the same: <strong>a term had changed, and the invoice hadn&apos;t</strong>. Objections
             came as an email, a marked-up annexure, or silence from an AP portal that rejected the invoice without saying why. Some terms were for Operations to decide, some needed Legal.
             Each time, I had to work out from both teams and from the MSA with the employer what had changed, and whether the person who agreed it was allowed to.
           </p>
