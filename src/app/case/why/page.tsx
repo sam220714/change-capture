@@ -14,8 +14,8 @@ const REASONS = [
     text: "WorldCC and Sirion (2026) found contract data is often captured once, then updated manually, periodically, or only at amendment or renewal. A repository is only as good as its last update.",
   },
   {
-    title: "Current AI Is Good at Exactly This",
-    text: "Reading a messy thread, telling a proposal from an acceptance, and quoting the line that proves it are things today's models do well. The parts they should not own, like who may approve, stay in rules.",
+    title: "Current AI Is Good Enough, With Checks",
+    text: "Models can read a messy thread and quote the line that shows a change, but they still slip on proposal versus acceptance, and published reviews find extraction weakest on amendments. So every quote is checked word for word against the email, a person confirms before anything is recorded, and who may approve stays in rules.",
   },
 ];
 

@@ -5,7 +5,7 @@ const SUPPORTING = [
   { metric: "Precision of \"agreed\" calls", why: "A false \"agreed\" updates the contract wrongly. This is the riskiest AI judgement.", target: "≥ 95% on a labelled sample" },
   { metric: "Median time from email agreement to approved record", why: "Shows the routing actually removes stalls.", target: "< 3 business days" },
   { metric: "Routing overrides", why: "Routing is rules, so it can only be wrong if the limits table is off or a change was misread. Each override says which. Too many and Finance and Legal stop trusting the queue, which brings the stalls back.", target: "< 10% of records" },
-  { metric: "Capture rate", why: "Every other metric is measured on captured changes. If owners don't paste the threads where changes were agreed, none of the value arrives, so this is the adoption test.", target: "80% of agreed changes found in the audit" },
+  { metric: "Capture rate", why: "Every other metric is measured on captured changes. If owners don't paste the threads where changes were agreed, none of the value arrives, so this is the adoption test. It also caps the north star: an uncaptured change can't reach the record.", target: "≥ 95% of agreed changes found in the audit" },
 ];
 
 const RETHINK = [
@@ -30,8 +30,8 @@ export default function MetricsPage() {
           Share of commercial changes agreed with suppliers that are in the contract record within 5 business days of agreement.
         </p>
         <p className="mt-4 max-w-3xl text-base font-light leading-6 text-sirion-soft">
-          Pilot target: from an audited baseline to 90% for pilot suppliers within 8 weeks. Measured by sampling supplier threads each month and checking each agreed change against the
-          contract record. It rises only if changes are captured, routed, approved and recorded, so it can&apos;t be gamed by one step alone.
+          Pilot target: from an audited baseline to 90% for pilot suppliers within 8 weeks. Measured by a monthly audit: Procurement samples threads with pilot suppliers, pulled by the business owners themselves under a pilot privacy
+          notice, and checks each agreed change against the contract record. The product never reads a mailbox; the audit is a manual, consented step. It rises only if changes are captured, routed, approved and recorded, so it can&apos;t be gamed by one step alone.
         </p>
       </section>
 
@@ -56,7 +56,7 @@ export default function MetricsPage() {
           </DarkCard>
           <DarkCard>
             <p className="text-lg font-bold text-sirion-text">Audited Baseline</p>
-            <p className="mt-2 text-base font-light leading-6 text-sirion-soft">Six months of past threads compared with the contract record, to measure how many agreed changes never made it.</p>
+            <p className="mt-2 text-base font-light leading-6 text-sirion-soft">Six months of past threads with pilot suppliers, exported by business owners under the pilot privacy notice, compared with the contract record to measure how many agreed changes never made it.</p>
           </DarkCard>
           <DarkCard>
             <p className="text-lg font-bold text-sirion-text">Labelled Eval Set</p>

@@ -7,7 +7,7 @@ const PEOPLE = [
     who: "Business Owner",
     tag: "Primary user",
     wants: "Keep the work moving and the supplier happy. Agree quickly, in the channel they already use.",
-    gets: "Keeps agreeing in email. The record, routing and drafts are done for them; they confirm in one click.",
+    gets: "Keeps agreeing in email, then pastes the thread in. The record, routing and drafts are done for them; they confirm in one click. That paste is the one habit the product depends on, from the people who skip paperwork today.",
   },
   {
     who: "Finance Business Partner",
@@ -76,7 +76,7 @@ const CONFLICTS = [
     a: "Visibility",
     b: "Privacy",
     tension: "More threads captured means more changes caught, and more personal data processed.",
-    resolve: "Only what a person pastes, never a mailbox. Coverage gaps are accepted as the price of trust.",
+    resolve: "Only what a person pastes, never a mailbox. Coverage gaps are accepted as the price of trust. The pilot audit samples threads by hand, with the owners' consent and a privacy notice.",
   },
 ];
 
