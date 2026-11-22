@@ -163,7 +163,7 @@ export function CaptureView({ threadId }: { threadId: string }) {
       </div>
 
       {!ready && !error && (
-        <div className="ai-surface mb-6 animate-pulse rounded-r-lg p-6 text-sm text-sirion-s3">Reading the thread and working out what was agreed. On the free Gemini tier this can take up to 40 seconds; if it is busy, the stored extraction is shown instead.</div>
+        <div className="ai-surface mb-6 animate-pulse rounded-r-lg p-6 text-sm text-sirion-s3">Reading the thread and working out the details. This can take up to 40 seconds</div>
       )}
       {error && <div className="mb-6 rounded-lg bg-sirion-warning-soft p-4 text-sm text-sirion-warning-ink">{error}</div>}
 

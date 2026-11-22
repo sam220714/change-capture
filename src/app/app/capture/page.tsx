@@ -1,25 +1,24 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ArrowRight } from "lucide-react";
 import { THREADS } from "@/lib/data/threads";
-import { SUPPLIERS } from "@/lib/data/company";
+import { SUPPLIERS, personById, supplierById } from "@/lib/data/company";
+import { contractBySupplier } from "@/lib/data/contracts";
 import { MAX_PASTE_CHARS, PASTED_KEY } from "@/lib/threadText";
 import { Button, Card, Eyebrow, PageHeader, WorkSurface } from "@/components/ui";
 
-/** Sample threads are loaded into the box as plain text, the same shape a user would paste. */
-function sampleText(threadId: string) {
-  const thread = THREADS.find((t) => t.id === threadId)!;
-  return thread.messages.map((m) => `From: ${m.from}\nTo: ${m.to}\nDate: ${m.date}\n\n${m.body}`).join("\n\n");
+function ownerName(supplierId: string) {
+  const ownerId = contractBySupplier(supplierId)?.businessOwnerId;
+  return ownerId ? personById(ownerId)?.name : undefined;
 }
 
-export default function PasteThreadPage() {
+export default function CaptureChangePage() {
   const router = useRouter();
   const [live, setLive] = useState<boolean | null>(null);
   const [text, setText] = useState("");
-  /** Set while the box still holds an untouched sample, so it keeps its stored answer if live AI is busy. */
-  const [sampleId, setSampleId] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -30,19 +29,9 @@ export default function PasteThreadPage() {
       .catch(() => setLive(false));
   }, []);
 
-  function loadSample(id: string) {
-    setText(sampleText(id));
-    setSampleId(id);
-    setError(null);
-  }
-
   const tooLong = text.length > MAX_PASTE_CHARS;
 
   async function analyse() {
-    if (sampleId) {
-      router.push(`/app/capture/${sampleId}`);
-      return;
-    }
     setBusy(true);
     setError(null);
     try {
@@ -81,18 +70,46 @@ export default function PasteThreadPage() {
         </div>
       )}
 
-      <Card className="p-6">
-        <Eyebrow>Supplier Thread</Eyebrow>
-        <h2 className="mt-2 text-2xl text-sirion-ink">Analyse Any Supplier Thread</h2>
+      <section aria-labelledby="samples-heading">
+        <Eyebrow>Sample Threads</Eyebrow>
+        <h2 id="samples-heading" className="mt-2 text-2xl text-sirion-ink">
+          Start With a Sample
+        </h2>
+        <p className="mt-1 text-sm font-light text-sirion-muted2">Four supplier threads, each testing a different rule. One click runs it.</p>
+        <div className="mt-4 grid gap-4 md:grid-cols-2">
+          {THREADS.map((t) => {
+            const owner = ownerName(t.supplierId);
+            return (
+              <Link
+                key={t.id}
+                href={`/app/capture/${t.id}`}
+                className="group hairline flex flex-col rounded-lg border-sirion-light bg-sirion-card p-5 transition-colors hover:border-sirion-line"
+              >
+                <Eyebrow>{t.label}</Eyebrow>
+                <h3 className="mt-2 text-lg font-normal text-sirion-ink">{t.subject}</h3>
+                <p className="mt-0.5 text-sm text-sirion-muted2">
+                  {supplierById(t.supplierId)?.name}
+                  {owner && ` · Owner: ${owner}`}
+                </p>
+                <p className="mt-3 flex-1 text-sm font-light leading-6 text-sirion-ink">{t.lookFor}</p>
+                <span className="mt-4 inline-flex items-center gap-1 text-sm text-sirion-s3 group-hover:underline">
+                  Run This Thread <ArrowRight size={14} strokeWidth={1.5} />
+                </span>
+              </Link>
+            );
+          })}
+        </div>
+      </section>
+
+      <Card className="mt-10 p-6">
+        <Eyebrow>Your Own Thread</Eyebrow>
+        <h2 className="mt-2 text-2xl text-sirion-ink">Paste a Supplier Thread</h2>
         <p className="mt-1 text-sm font-light text-sirion-muted2">
-          Paste messages with From:, To: and Date: lines. The supplier is matched by email domain ({SUPPLIERS.map((s) => s.domain).join(", ")}).
+          Works with threads from the prototype&apos;s suppliers ({SUPPLIERS.map((s) => s.name).join(", ")}), matched by email domain. Paste messages with From:, To: and Date: lines.
         </p>
         <textarea
           value={text}
-          onChange={(e) => {
-            setText(e.target.value);
-            setSampleId(null);
-          }}
+          onChange={(e) => setText(e.target.value)}
           rows={12}
           placeholder={"From: Rohan Desai <rohan.desai@talentbridge.in>\nTo: Priya Menon <priya.menon@kavora.in>\nDate: 2026-11-18\n\nHi Priya, we'd like to add one QA engineer from 1 December...\n\nFrom: Priya Menon <priya.menon@kavora.in>\n..."}
           className="hairline mt-4 w-full rounded-sm border-sirion-line/50 bg-sirion-app p-3 font-mono text-sm text-sirion-ink placeholder:text-sirion-muted"
@@ -101,22 +118,11 @@ export default function PasteThreadPage() {
           {text.length.toLocaleString("en-IN")} / {MAX_PASTE_CHARS.toLocaleString("en-IN")} characters{tooLong && ". Trim the thread to the messages that discuss the change."}
         </p>
         <div className="mt-3 flex flex-wrap items-center gap-3">
-          <Button onClick={analyse} disabled={busy || text.trim().length < 20 || tooLong || (live === false && !sampleId)}>
+          <Button onClick={analyse} disabled={busy || text.trim().length < 20 || tooLong || live === false}>
             {busy ? "Reading Thread…" : "Analyse Thread"} <ArrowRight size={14} strokeWidth={1.5} />
           </Button>
-          {live === false && !sampleId && <span className="text-sm text-sirion-muted2">Live AI is off in this deployment. Load a sample thread, or set GEMINI_API_KEY to enable.</span>}
+          {live === false && <span className="text-sm text-sirion-muted2">Live AI is off in this deployment, so only the sample threads above run.</span>}
           {error && <span className="text-sm text-sirion-danger-ink">{error}</span>}
-        </div>
-
-        <div className="mt-6 border-t border-sirion-light pt-4">
-          <p className="mb-2 text-sm text-sirion-muted2">No thread to hand? Load a sample:</p>
-          <div className="flex flex-wrap gap-2">
-            {THREADS.map((t) => (
-              <Button key={t.id} variant="secondary" onClick={() => loadSample(t.id)}>
-                {t.label}
-              </Button>
-            ))}
-          </div>
         </div>
       </Card>
     </WorkSurface>

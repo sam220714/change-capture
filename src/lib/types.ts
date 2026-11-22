@@ -84,6 +84,7 @@ export interface Thread {
   supplierId: string;
   subject: string;
   label: string; // demo label, e.g. "Clean rate change"
+  lookFor: string; // one line on what the sample shows
   messages: EmailMessage[];
 }
 

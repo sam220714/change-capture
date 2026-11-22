@@ -13,6 +13,7 @@ export const THREADS: Thread[] = [
     supplierId: "s-tb",
     subject: "QA rate revision, SOW-TB-03",
     label: "Clean agreed rate change",
+    lookFor: "Inside every limit. The only catch: the MSA says email doesn't amend the contract, so an amendment is drafted.",
     messages: [
       {
         from: ROHAN,
@@ -39,6 +40,7 @@ export const THREADS: Thread[] = [
     supplierId: "s-ka",
     subject: "Diagnostic timeline and team",
     label: "Ambiguous: proposal, counter, condition",
+    lookFor: "Nothing is fully agreed. The AI separates the rejected analyst, the superseded 4-week extension and the open condition.",
     messages: [
       {
         from: MEERA,
@@ -77,6 +79,7 @@ export const THREADS: Thread[] = [
     supplierId: "s-ll",
     subject: "Festive campaign: scope and retainer",
     label: "Agreed without authority",
+    lookFor: "A coordinator said yes. The MSA allows email change orders, but only from an authorised person.",
     messages: [
       {
         from: SANA,
@@ -103,6 +106,7 @@ export const THREADS: Thread[] = [
     supplierId: "s-tb",
     subject: "Senior developer rates and payment terms",
     label: "Breaks the MSA",
+    lookFor: "An 11.9% rise against a 5% MSA cap, plus Net 15 that the supplier treats as agreed. Goes to Finance and Legal.",
     messages: [
       {
         from: ROHAN,

@@ -14,13 +14,6 @@ const LOOP = [
   { icon: ReceiptText, title: "Keep Terms Current", text: "Approved changes update the contract's terms, each traced to source, and invoices are checked against them." },
 ];
 
-const LOOK_FOR: Record<string, string> = {
-  "t-tb-qa": "Inside every limit. The only catch: the MSA says email doesn't amend the contract, so an amendment is drafted.",
-  "t-ka-ext": "Nothing is fully agreed. The AI separates the rejected analyst, the superseded 4-week extension and the open condition.",
-  "t-ll-festive": "A coordinator said yes. The MSA allows email change orders, but only from an authorised person.",
-  "t-tb-senior": "An 11.9% rise against a 5% MSA cap, plus Net 15 that the supplier treats as agreed. Goes to Finance and Legal.",
-};
-
 export default function Home() {
   return (
     <CasePage
@@ -71,7 +64,7 @@ export default function Home() {
                 <p className="text-xs font-bold uppercase tracking-[1.5px] text-sirion-line">{t.label}</p>
                 <h3 className="mt-2 text-2xl font-normal text-sirion-text">{t.subject}</h3>
                 <p className="mt-1 text-sm text-sirion-soft">{supplierById(t.supplierId)?.name}</p>
-                <p className="mt-3 text-base font-light leading-6 text-sirion-soft">{LOOK_FOR[t.id]}</p>
+                <p className="mt-3 text-base font-light leading-6 text-sirion-soft">{t.lookFor}</p>
                 <span className="mt-4 inline-flex items-center gap-1 text-base text-sirion-text">
                   Capture <ArrowRight size={16} strokeWidth={1.5} />
                 </span>

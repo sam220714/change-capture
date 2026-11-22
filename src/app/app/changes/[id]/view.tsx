@@ -12,7 +12,7 @@ import { instrumentId } from "@/lib/terms";
 import { date, dateTime } from "@/lib/format";
 import { evaluate, isLive } from "@/lib/rules";
 import { counterReply, voiceFor } from "@/lib/verdict";
-import { AIPanel, Button, Card, Empty, Eyebrow, LinkButton, StageChip, StatusChip, WorkSurface } from "@/components/ui";
+import { AIPanel, Button, Card, Empty, Eyebrow, LinkButton, StageChip, WorkSurface } from "@/components/ui";
 import { ChecksList, recordThread, roleLabel, ThreadView } from "@/components/capture";
 
 const unlocked = (r: ChangeRecord, s: ApprovalStep) => s.role === "business_owner" || r.steps.find((x) => x.role === "business_owner")?.status === "approved";
@@ -166,35 +166,30 @@ export function RecordView({ id }: { id: string }) {
             </div>
             <div className="overflow-x-auto">
               {/* Fixed value columns; the effective date sits under the description so long values and descriptions never crush each other. */}
-              <table className="mt-3 w-full min-w-[560px] table-fixed text-sm">
+              <table className="mt-3 w-full min-w-[480px] table-fixed text-sm">
                 <colgroup>
                   <col />
                   <col className="w-[120px]" />
                   <col className="w-[170px]" />
-                  <col className="w-[130px]" />
                 </colgroup>
                 <thead>
                   <tr className="border-b border-sirion-light text-left text-xs text-sirion-muted2">
                     <th className="px-5 py-2 font-normal">Change</th>
                     <th className="px-3 py-2 font-normal">Current</th>
-                    <th className="px-3 py-2 font-normal">New</th>
-                    <th className="px-5 py-2 font-normal">Status</th>
+                    <th className="px-5 py-2 font-normal">New</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-sirion-light">
-                  {r.extraction.changes.map((c) => (
-                    <tr key={c.id} className={`h-12 align-top ${isLive(c) ? "" : "opacity-60"}`}>
+                  {r.extraction.changes.filter(isLive).map((c) => (
+                    <tr key={c.id} className="h-12 align-top">
                       <td className="px-5 py-3 text-sirion-ink">
                         <span className="mr-2 text-xs text-sirion-muted2">{c.id}</span>
                         {c.description}
                         {c.effectiveDate && <span className="mt-0.5 block text-xs text-sirion-muted2">From {date(c.effectiveDate)}</span>}
                       </td>
                       <td className="px-3 py-3">{c.fromValue ? <span className="diff-del rounded px-1 text-sirion-muted2">{c.fromValue}</span> : "—"}</td>
-                      <td className="px-3 py-3">
-                        <span className="diff-add rounded px-1 text-sirion-ink">{c.toValue}</span>
-                      </td>
                       <td className="px-5 py-3">
-                        <StatusChip status={c.status} />
+                        <span className="diff-add rounded px-1 text-sirion-ink">{c.toValue}</span>
                       </td>
                     </tr>
                   ))}
