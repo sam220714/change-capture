@@ -18,6 +18,12 @@ const EVIDENCE = [
   { claim: "Scope changes are the top cause of contracting delays, cited by 45%.", source: "ContractPodAi / ACC, 2023" },
 ];
 
+const THEN_NOW = [
+  { then: "A changed term arrived as an email, a marked-up annexure, or not at all.", now: "The business owner pastes the thread. AI turns it into a structured change and quotes the lines that prove it." },
+  { then: "I asked Operations, Legal and the MSA what was allowed, and who had to approve it.", now: "Rules check the change against the MSA and the approval limits, and route it to the one person who must approve. AI never approves." },
+  { then: "The rule we learned was never written down, so the same invoice could go out wrong next month.", now: "The approved change updates the contract record, linked to the email it came from." },
+];
+
 export default function ProblemPage() {
   return (
     <CasePage
@@ -26,6 +32,50 @@ export default function ProblemPage() {
       lead="Commercial terms on live supplier contracts change in email. The contract record doesn't. Every invoice is then checked against terms that are no longer true."
       next={{ href: "/case/metrics", label: "Success Metrics" }}
     >
+      <Section eyebrow="Where This Comes From" title="I Was the Person Running Between Legal and Operations">
+        <Prose>
+          <p>
+            Picture the largest invoice your business has ever raised: ₹24.89 lakh. The next morning the client disputes ₹48,444 of it, about 2%, and the whole invoice stops. For every
+            rupee genuinely in dispute, fifty-one sit still. The money arrives 20 days after the due date.
+          </p>
+          <p>
+            At Refyne, where I worked on B2B invoicing, this was routine, and the cause was usually the same: <strong>a term had changed, and the invoice hadn&apos;t</strong>. Objections
+            came as an email, a marked-up annexure, or silence from an AP portal that rejected the invoice without saying why. Some terms were for Operations to decide, some needed Legal.
+            Each time, I had to work out from both teams and from the MSA with the employer what had changed, and whether the person who agreed it was allowed to.
+          </p>
+          <p>
+            So every dispute was really two problems. <strong>First, working out what had changed:</strong> which term was new, which was old, and whether it was allowed.{" "}
+            <strong>Second, producing a correct invoice</strong> under the rules that now applied.
+          </p>
+          <p>
+            We solved the second: once a rule was clear, invoices were generated faster and with fewer manual errors. The first stayed manual, in a weekly session with Operations and
+            client support, because they held the context.
+          </p>
+          <p>
+            <strong>Change Capture solves the first problem, from the other side of the table.</strong> Here it is the buyer&apos;s contract record that goes stale, and the supplier whose
+            invoice gets held.
+          </p>
+        </Prose>
+        <div className="hairline mt-8 overflow-x-auto rounded-lg border-sirion-line/50">
+          <table className="w-full min-w-[640px] text-sm">
+            <thead>
+              <tr className="border-b border-sirion-line/40 text-left text-xs text-sirion-soft">
+                <th className="w-1/2 px-5 py-3 font-normal">At Refyne</th>
+                <th className="w-1/2 px-5 py-3 font-normal">In Change Capture</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-sirion-line/30">
+              {THEN_NOW.map((r) => (
+                <tr key={r.then}>
+                  <td className="px-5 py-4 font-light text-sirion-soft">{r.then}</td>
+                  <td className="px-5 py-4 text-sirion-text">{r.now}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </Section>
+
       <Section eyebrow="Who It Affects" title="Five Groups, One Gap">
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {WHO.map((w) => (
