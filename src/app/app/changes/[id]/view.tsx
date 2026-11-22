@@ -10,7 +10,8 @@ import { needsSignature, useStore } from "@/lib/store";
 import { amendmentDraft, confirmationDraft, declineDraft } from "@/lib/drafts";
 import { instrumentId } from "@/lib/terms";
 import { date, dateTime } from "@/lib/format";
-import { isLive } from "@/lib/rules";
+import { evaluate, isLive } from "@/lib/rules";
+import { counterReply, voiceFor } from "@/lib/verdict";
 import { AIPanel, Button, Card, Empty, Eyebrow, LinkButton, StageChip, StatusChip, WorkSurface } from "@/components/ui";
 import { ChecksList, recordThread, roleLabel, ThreadView } from "@/components/capture";
 
@@ -58,6 +59,7 @@ export function RecordView({ id }: { id: string }) {
   const { records, viewerId, setViewer, decide, sendReply, recordAcceptance, sendConfirmation, markSigned, replies, ready } = store;
   const [note, setNote] = useState("");
   const [tab, setTab] = useState<"doc" | "email">("doc");
+  const [answer, setAnswer] = useState<"counter" | "decline">("counter");
   const r = records.find((x) => x.id === id);
 
   if (!ready) return <WorkSurface>{null}</WorkSurface>;
@@ -81,6 +83,19 @@ export function RecordView({ id }: { id: string }) {
   const docTitle = r.instrument === "amendment" ? "Amendment" : "Change Order";
   const nextStep = r.steps.find((s) => s.status === "pending" && unlocked(r, s));
   const replySent = replies[r.id];
+  const myStep = r.stage === "in_review" ? r.steps.find((s) => s.status === "pending" && unlocked(r, s) && s.assigneeId === viewerId) : undefined;
+  const laterRoles = r.steps.filter((s) => s.role !== "business_owner").map((s) => roleLabel[s.role]);
+  const approveLabel = (s: ApprovalStep) =>
+    s.role === "business_owner" && laterRoles.length > 0 ? `Confirm and Send to ${laterRoles.join(" and ")}` : "Approve";
+  // After a rejection the supplier still needs an answer: a counter at the cap when one exists, else a decline.
+  const counter =
+    r.stage === "rejected"
+      ? (evaluate(r.extraction, contract)
+          .verdicts.map((x) => counterReply(x, contract, voiceFor(owner, owner.id)))
+          .find(Boolean) ?? null)
+      : null;
+  const answered = r.log.some((l) => l.text.startsWith("Counter sent") || l.text.startsWith("Decline sent"));
+  const supplierAnswer = counter && answer === "counter" ? counter.text : declineDraft(r, contract);
 
   return (
     <WorkSurface>
@@ -104,6 +119,43 @@ export function RecordView({ id }: { id: string }) {
       <Card className="mb-6 p-4">
         <FlowStrip r={r} />
       </Card>
+
+      {myStep && (
+        <Card className="mb-6 border-sirion-s3 p-5 shadow-glow">
+          <Eyebrow>Your Action</Eyebrow>
+          <p className="mt-2 text-lg text-sirion-ink">
+            {roleLabel[myStep.role]} decision on {r.id}
+          </p>
+          <p className="mt-1 text-sm font-light text-sirion-muted2">{myStep.reason}</p>
+          <div className="mt-4 flex flex-col gap-2 md:flex-row md:items-center">
+            <input
+              value={note}
+              onChange={(e) => setNote(e.target.value)}
+              placeholder="Note (optional)"
+              className="hairline w-full rounded-sm border-sirion-line/50 bg-sirion-app px-3 py-2 text-sm md:max-w-sm"
+            />
+            <div className="flex flex-wrap gap-2">
+              <Button
+                onClick={() => {
+                  decide(r.id, myStep.id, true, note || undefined);
+                  setNote("");
+                }}
+              >
+                {approveLabel(myStep)}
+              </Button>
+              <Button
+                variant="secondary"
+                onClick={() => {
+                  decide(r.id, myStep.id, false, note || undefined);
+                  setNote("");
+                }}
+              >
+                Reject
+              </Button>
+            </div>
+          </div>
+        </Card>
+      )}
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)]">
         <div className="space-y-6">
@@ -209,9 +261,44 @@ export function RecordView({ id }: { id: string }) {
               </div>
             </div>
             {r.stage === "rejected" ? (
-              <div className="ai-surface rounded-r-sm p-4">
-                <pre className="whitespace-pre-wrap font-sans text-sm leading-6 text-sirion-ink">{declineDraft(r, contract)}</pre>
-              </div>
+              <>
+                <p className="mb-3 text-sm font-light text-sirion-muted2">
+                  Rejected internally. The supplier still needs an answer{counter ? ": counter inside the MSA cap, or decline." : "."}
+                </p>
+                {counter && !answered && (
+                  <div className="mb-3 inline-flex rounded-sm bg-sirion-app p-1 text-sm">
+                    {(["counter", "decline"] as const).map((k) => (
+                      <button
+                        key={k}
+                        onClick={() => setAnswer(k)}
+                        className={`rounded-sm px-3 py-1 ${answer === k ? "bg-sirion-card text-sirion-ink shadow-sm" : "text-sirion-muted2"}`}
+                      >
+                        {k === "counter" ? counter.label : "Decline"}
+                      </button>
+                    ))}
+                  </div>
+                )}
+                <div className="ai-surface rounded-r-sm p-4">
+                  <pre className="whitespace-pre-wrap font-sans text-sm leading-6 text-sirion-ink">{supplierAnswer}</pre>
+                </div>
+                <div className="mt-4">
+                  {answered ? (
+                    <p className="inline-flex items-center gap-2 text-sm text-sirion-s3">
+                      <Check size={14} strokeWidth={1.5} /> Sent to {supplier.contact}
+                    </p>
+                  ) : viewerId === owner.id ? (
+                    <Button
+                      onClick={() =>
+                        sendReply(r.id, counter && answer === "counter" ? `Counter sent to supplier: ${counter.label}.` : "Decline sent to supplier.")
+                      }
+                    >
+                      <Send size={14} strokeWidth={1.5} /> {counter && answer === "counter" ? "Send Counter" : "Send Decline"} to {supplier.contact}
+                    </Button>
+                  ) : (
+                    <SwitchTo id={owner.id} onSwitch={setViewer} why="to answer the supplier" />
+                  )}
+                </div>
+              </>
             ) : (
               <>
                 <div className={`ai-surface relative rounded-r-sm p-4 ${r.stage === "in_review" || r.stage === "clarifying" ? "opacity-60" : ""}`}>
@@ -291,35 +378,7 @@ export function RecordView({ id }: { id: string }) {
                         {s.note ? ` · "${s.note}"` : ""}
                       </p>
                     )}
-                    {mine && (
-                      <div className="mt-3 space-y-2">
-                        <input
-                          value={note}
-                          onChange={(e) => setNote(e.target.value)}
-                          placeholder="Note (optional)"
-                          className="hairline w-full rounded-sm border-sirion-line/50 bg-sirion-app px-3 py-2 text-sm"
-                        />
-                        <div className="flex gap-2">
-                          <Button
-                            onClick={() => {
-                              decide(r.id, s.id, true, note || undefined);
-                              setNote("");
-                            }}
-                          >
-                            Approve
-                          </Button>
-                          <Button
-                            variant="secondary"
-                            onClick={() => {
-                              decide(r.id, s.id, false, note || undefined);
-                              setNote("");
-                            }}
-                          >
-                            Reject
-                          </Button>
-                        </div>
-                      </div>
-                    )}
+                    {mine && <p className="mt-3 text-sm text-sirion-s3">Your decision is at the top of this page.</p>}
                     {open && !mine && <SwitchTo id={s.assigneeId} onSwitch={setViewer} why="to act on this step" />}
                   </li>
                 );

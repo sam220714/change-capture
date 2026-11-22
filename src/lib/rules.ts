@@ -353,6 +353,10 @@ export function evaluate(extraction: Extraction, contract: Contract): RuleResult
     if (fin) steps.push({ id: "s-finance", role: "finance", assigneeId: "p-rahul", reason: fin.join(" "), status: "pending" });
     const leg = routes.get("legal");
     if (leg) steps.push({ id: "s-legal", role: "legal", assigneeId: "p-anika", reason: leg.join(" "), status: "pending" });
+    const deciders = [fin && "Finance", leg && "Legal"].filter(Boolean).join(" and ");
+    if (deciders && !needsClarification && !ratify) {
+      steps[0].reason = `Confirm the captured terms match what you agreed. Confirming does not accept the change: ${deciders} decide.`;
+    }
   }
 
   // Buckets. Block beats sign-off beats approve. A change needs sign-off when anyone besides the owner must say yes, or when it is not fully agreed.

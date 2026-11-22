@@ -22,7 +22,7 @@ interface Store extends State {
   setViewer: (id: string) => void;
   createRecord: (args: { threadId: string; contractId: string; extraction: Extraction; source: "live" | "stored"; pastedThread?: ChangeRecord["pastedThread"]; approveOwn?: boolean }) => string;
   decide: (recordId: string, stepId: string, approve: boolean, note?: string) => void;
-  sendReply: (recordId: string) => void;
+  sendReply: (recordId: string, logText?: string) => void;
   recordAcceptance: (recordId: string) => void;
   sendConfirmation: (recordId: string) => void;
   markSigned: (recordId: string) => void;
@@ -149,9 +149,9 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
             ],
           };
         }),
-      sendReply: (recordId) => {
+      sendReply: (recordId, logText) => {
         setState((s) => ({ ...s, replies: { ...s.replies, [recordId]: true } }));
-        update(recordId, (r, s) => ({ ...r, log: [...r.log, { at: now(), who: viewerName(s), text: "Clarifying reply approved and sent to supplier." }] }));
+        update(recordId, (r, s) => ({ ...r, log: [...r.log, { at: now(), who: viewerName(s), text: logText ?? "Clarifying reply approved and sent to supplier." }] }));
       },
       recordAcceptance: (recordId) =>
         update(recordId, (r, s) => {
