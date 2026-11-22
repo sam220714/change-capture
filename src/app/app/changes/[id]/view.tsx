@@ -223,7 +223,8 @@ export function RecordView({ id }: { id: string }) {
                       <Lock size={14} strokeWidth={1.5} /> Sending unlocks when every approval is in.
                     </p>
                   )}
-                  {r.stage === "approved" && (
+                  {r.stage === "approved" && viewerId !== owner.id && <SwitchTo id={owner.id} onSwitch={setViewer} why="to send this to the supplier" />}
+                  {r.stage === "approved" && viewerId === owner.id && (
                     <>
                       <Button onClick={() => sendConfirmation(r.id)}>
                         <Send size={14} strokeWidth={1.5} /> Approve and Send to {supplier.contact}
@@ -231,7 +232,8 @@ export function RecordView({ id }: { id: string }) {
                       <span className="text-xs text-sirion-muted2">Sends the {needsSignature(r) ? `${docTitle.toLowerCase()} for signature` : "confirmation"} with the email.</span>
                     </>
                   )}
-                  {r.stage === "sent" && (
+                  {r.stage === "sent" && viewerId !== owner.id && <SwitchTo id={owner.id} onSwitch={setViewer} why="to record the signature" />}
+                  {r.stage === "sent" && viewerId === owner.id && (
                     <Button onClick={() => markSigned(r.id)}>
                       <Check size={14} strokeWidth={1.5} /> Mark Signed by Both Parties
                     </Button>

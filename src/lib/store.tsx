@@ -20,7 +20,7 @@ const initial: State = { viewerId: "p-priya", records: [], replies: {} };
 interface Store extends State {
   ready: boolean;
   setViewer: (id: string) => void;
-  createRecord: (args: { threadId: string; contractId: string; extraction: Extraction; source: "live" | "stored"; pastedThread?: ChangeRecord["pastedThread"] }) => string;
+  createRecord: (args: { threadId: string; contractId: string; extraction: Extraction; source: "live" | "stored"; pastedThread?: ChangeRecord["pastedThread"]; approveOwn?: boolean }) => string;
   decide: (recordId: string, stepId: string, approve: boolean, note?: string) => void;
   sendReply: (recordId: string) => void;
   recordAcceptance: (recordId: string) => void;
@@ -90,11 +90,32 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
       ...state,
       ready,
       setViewer: (viewerId) => setState((s) => ({ ...s, viewerId })),
-      createRecord: ({ threadId, contractId, extraction, source, pastedThread }) => {
+      createRecord: ({ threadId, contractId, extraction, source, pastedThread, approveOwn }) => {
         const existing = state.records.find((r) => r.threadId === threadId);
         if (existing) return existing.id;
         const id = `CR-${1001 + state.records.length}`;
-        setState((s) => ({ ...s, records: [...s.records, { ...build(id, threadId, contractId, extraction, source, s.viewerId), pastedThread }] }));
+        setState((s) => {
+          let rec: ChangeRecord = { ...build(id, threadId, contractId, extraction, source, s.viewerId), pastedThread };
+          // "Approve and Create Record": the business owner's own click is their approval.
+          const ownerId = contractById(contractId)!.businessOwnerId;
+          if (approveOwn && s.viewerId === ownerId && rec.stage === "in_review") {
+            const steps = rec.steps.map((st) =>
+              st.role === "business_owner" && st.assigneeId === ownerId ? { ...st, status: "approved" as const, decidedAt: now() } : st,
+            );
+            const all = steps.every((st) => st.status === "approved");
+            rec = {
+              ...rec,
+              steps,
+              stage: all ? "approved" : rec.stage,
+              log: [
+                ...rec.log,
+                { at: now(), who: viewerName(s), text: "Approved: business owner step." },
+                ...(all ? [{ at: now(), who: "System", text: "All approvals in. Drafts ready to send." }] : []),
+              ],
+            };
+          }
+          return { ...s, records: [...s.records, rec] };
+        });
         return id;
       },
       decide: (recordId, stepId, approve, note) =>

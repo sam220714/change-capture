@@ -36,6 +36,13 @@ export function valueImpact(c: ExtractedChange, contract: Contract): number {
     return delta * monthsBetween(start, end);
   }
   if (c.type === "fee" || c.type === "rate") return delta; // one-off amount
+  // Added heads cost the role's current rate at the same monthly hours per head as today.
+  if (c.type === "headcount" && term?.kind === "headcount" && term.numeric && term.key.startsWith("headcount.")) {
+    const rate = termFor(contract, term.key.replace(/^headcount\./, "rate."));
+    if (rate?.numeric && rate.monthlyVolume) {
+      return delta * (rate.monthlyVolume / term.numeric) * rate.numeric * monthsBetween(start, end);
+    }
+  }
   return 0;
 }
 

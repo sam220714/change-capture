@@ -9,7 +9,7 @@ import { threadById } from "@/lib/data/threads";
 import { contractById } from "@/lib/data/contracts";
 import { personById, supplierById } from "@/lib/data/company";
 import { evaluate, type Bucket, type ChangeVerdict } from "@/lib/rules";
-import { bucketCopy, closedLine, counterReply, ctaLabel, routeCaption, verdictFor, voiceFor } from "@/lib/verdict";
+import { allApprovable, bucketCopy, closedLine, counterReply, ctaLabel, routeCaption, verdictFor, voiceFor } from "@/lib/verdict";
 import { useStore } from "@/lib/store";
 import { PASTED_KEY } from "@/lib/threadText";
 import { AIPanel, Button, Card, Eyebrow, LinkButton, WorkSurface } from "@/components/ui";
@@ -80,6 +80,9 @@ export function CaptureView({ threadId }: { threadId: string }) {
   const focusId = pinned ?? hover;
   const focusName = focusId ? (rules?.verdicts.find((v) => v.change.id === focusId)?.name ?? changes.find((c) => c.id === focusId)?.description ?? null) : null;
 
+  // Only the business owner's own click can count as their approval.
+  const ownerApproves = Boolean(rules && owner && allApprovable(rules) && viewerId === owner.id);
+
   function create() {
     if (!result || !contract) return;
     const id = createRecord({
@@ -88,6 +91,7 @@ export function CaptureView({ threadId }: { threadId: string }) {
       extraction: result.extraction,
       source: result.source,
       pastedThread: thread ? undefined : { subject, supplierId: contract.supplierId, messages },
+      approveOwn: ownerApproves,
     });
     router.push(`/app/changes/${id}`);
   }
@@ -179,7 +183,7 @@ export function CaptureView({ threadId }: { threadId: string }) {
                   </LinkButton>
                 ) : (
                   <Button onClick={create} disabled={rules.steps.length === 0}>
-                    {ctaLabel(rules)} <ArrowRight size={14} strokeWidth={1.5} />
+                    {ownerApproves ? ctaLabel(rules) : "Create Record and Route"} <ArrowRight size={14} strokeWidth={1.5} />
                   </Button>
                 )}
                 {suggested && (
